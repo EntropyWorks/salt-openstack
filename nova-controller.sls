@@ -14,10 +14,9 @@ nova-services:
       - nova-api
       - nova-scheduler
       - nova-cert
-    - require:
+    - watch:
       - cmd.run: nova-db-init
-      - cmd.run: keystone-db-init
-      - service.running: glance-api
+      - file: /etc/nova
 
 nova-db-init:
   cmd:
@@ -31,15 +30,14 @@ nova-db-init:
 
 nova-db-sync:
   cmd:
-    - run
+    - wait
     - name: nova-manage db sync
     - require:
       - pkg.installed: nova-api
       - pkg.installed: nova-scheduler
       - pkg.installed: nova-cert
       - pkg.installed: nova-network
-      - pkg.installed: mysql-server
-    - watch_in:
+    - watch:
       - service.running: nova-services
 
 nova-add-private-network:

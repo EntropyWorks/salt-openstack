@@ -69,7 +69,7 @@ openstack-pkgs:
 /root/scripts:
   file:
     - recurse
-    - source: salt://openstack/scripts
+    - source: salt://openstack/bin
     - file_mode: 755
     - template: jinja
     - defaults:

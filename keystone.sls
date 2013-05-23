@@ -1,6 +1,5 @@
 keystone-db-init:
-  cmd:
-    - run
+  cmd.run:
     - name: /root/scripts/create-db.sh keystone keystone {{ pillar['openstack']['database_password'] }}
     - unless: echo '' | mysql keystone
     - require:
@@ -14,17 +13,13 @@ keystone:
     - enable: True
     - require:
       - pkg.installed: keystone
-      - pkg.installed: mysql-server
     - watch:
       - cmd.run: keystone-db-init
 
 keystone-db-sync:
-  cmd:
-    - run
+  cmd.wait:
     - name: keystone-manage db_sync
-    - require:
-      - pkg.installed: keystone
-    - watch_in:
+    - watch:
       - service.running: keystone
 
 /etc/keystone:

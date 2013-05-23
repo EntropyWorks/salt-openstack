@@ -19,6 +19,7 @@ glance-services:
     - require:
       - pkg.installed: glance-api
       - pkg.installed: glance-registry
+    - watch:
       - cmd.run: glance-db-init
 
 /etc/glance:
