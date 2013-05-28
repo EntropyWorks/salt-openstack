@@ -1,44 +1,52 @@
-nova-support:
-  service:
-    - running
-    - enable: True
+include:
+  - openstack.repo
+  - openstack.mysql
+
+nova-pkgs:
+  pkg.installed:
+    - fromreo: private-openstack-repo
     - names:
-      - mysql
-      - rabbitmq
+      - nova-api
+      - nova-cert
+      - nova-common
+      - nova-network
+      - nova-scheduler
+      - nova-console
+      - nova-consoleauth
+    - require:
+      - pkg.installed: mysql-server
+      - pkg.installed: python-mysqldb
+      - pkg.installed: rabbitmq-server
 
 nova-services:
   service:
     - running
     - enable: True
+    - restart: True
     - names:
       - nova-api
-      - nova-scheduler
       - nova-cert
-    - watch:
-      - cmd.run: nova-db-init
-      - file: /etc/nova
-
-nova-db-init:
-  cmd:
-    - run
-    - name: /root/scripts/create-db.sh nova nova {{ pillar['openstack']['database_password'] }}
-    - unless: echo '' | mysql nova
+      - nova-scheduler
+      - nova-console
+      - nova-consoleauth
+      - nova-network
     - require:
-      - file.recurse: /root/scripts
-      - pkg.installed: nova-api
-      - service.running: mysql
+      - pkg.installed: nova-pkgs
+    - watch:
+      - file: /etc/nova
 
 nova-db-sync:
   cmd:
-    - wait
-    - name: nova-manage db sync
+    - run 
+    - name: nova-manage --config-dir=/etc/nova db sync
     - require:
-      - pkg.installed: nova-api
-      - pkg.installed: nova-scheduler
-      - pkg.installed: nova-cert
-      - pkg.installed: nova-network
+      - file.recurse: /etc/nova
+      - pkg.installed: mysql-server
+      - pkg.installed: nova-common
+      - mysql_database.present: nova
+      - cmd.run: nova-grant
     - watch:
-      - service.running: nova-services
+      - service: nova-services
 
 nova-add-private-network:
   cmd:
@@ -47,14 +55,15 @@ nova-add-private-network:
       --dns1 8.8.8.8 --dns2 8.8.4.4 \
       --fixed_range_v4 {{pillar['openstack']['nova_network_private']}} \
       --num_networks {{pillar['openstack']['nova_network_private_num']}} \
+      --bridge_interface {{pillar['openstack']['nova_network_bridge_interface']}}
       --network_size {{pillar['openstack']['nova_network_private_size']}} --multi_host=T"
     - unless: nova-manage network list | grep -q "8.8.8.8"
     - require:
-      - pkg.installed: nova-api
-      - pkg.installed: nova-scheduler
-      - pkg.installed: nova-cert
-      - pkg.installed: nova-network
       - pkg.installed: mysql-server
+      - pkg.installed: nova-common
+      - file: /etc/nova
+    - watch:
+      - cmd.run: nova-db-sync
 
 /etc/nova:
   file:
@@ -87,3 +96,15 @@ nova-add-private-network:
         ec2_url: {{ pillar['openstack']['database_host'] }}
         cc_host: {{ pillar['openstack']['database_host'] }}
         database_host: {{ pillar['openstack']['database_host'] }}
+
+#nova-add-floating-network:
+#  cmd:
+#    - run
+#    - name: "nova-manage floating create {{ pillar['openstack']['nova_network_floating'] }} --pool=nova"
+#    - unless: nova-manage network list | grep -q "nova"
+#    - require:
+#      - pkg.installed: mysql-server
+#      - pkg.installed: nova-common
+#      - file: /etc/nova
+#    - watch:
+#      - cmd.wait: nova-db-sync

@@ -1,7 +1,6 @@
 ubuntu-cloud-keyring:
   pkg.installed
 
-
 private-openstack-repo:
   pkgrepo.managed:
     - name: "deb http://ubuntu-cloud.archive.canonical.com/ubuntu precise-updates/grizzly main"
@@ -11,6 +10,4 @@ private-openstack-repo:
     - keyserver: keyserver.ubuntu.com
     - required:
       - pkg.installed: ubuntu-cloud-keyring
-    - require_in:
-      - pkg.installed: openstack-pkgs
 

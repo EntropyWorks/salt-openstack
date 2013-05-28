@@ -1,32 +1,63 @@
-keystone-db-init:
-  cmd.run:
-    - name: /root/scripts/create-db.sh keystone keystone {{ pillar['openstack']['database_password'] }}
-    - unless: echo '' | mysql keystone
-    - require:
-      - file.recurse: /root/scripts
-      - pkg.installed: keystone
-      - service.running: mysql
+include:
+  - openstack.mysql
+  - openstack.repo
 
-keystone:
+keystone-pkg:
+  pkg:
+    - name: keystone
+    - installed
+    - fromreo: private-openstack-repo
   service:
+    - name: keystone
     - running
     - enable: True
+    - restart: True
     - require:
-      - pkg.installed: keystone
+      - service.running: mysql
+      - mysql_database.present: keystone
+      - cmd.run: keystone-grant
+      - file: /etc/keystone
     - watch:
-      - cmd.run: keystone-db-init
+      - cmd.run: keystone-db-sync
 
 keystone-db-sync:
-  cmd.wait:
-    - name: keystone-manage db_sync
+  cmd.run:
+    - name: keystone-manage --config-file /etc/keystone/keystone.conf db_sync
+    - require:
+      - pkg.installed: keystone
+      - mysql_database.present: keystone
+      - cmd.run: keystone-grant
     - watch:
-      - service.running: keystone
+      - file: /etc/keystone
+
+keystone-basic:
+  cmd.run:
+    - name: /root/scripts/keystone_basic.sh
+    - require:
+      - file: /etc/keystone
+      - pkg.installed: keystone
+      - mysql_database.present: keystone
+      - cmd.run: keystone-grant
+      - cmd.run: keystone-db-sync
+
+keystone-endpoints:
+  cmd.run:
+    - name: /root/scripts/keystone_endpoints_basic.sh
+    - require:
+      - file: /etc/keystone
+      - pkg.installed: keystone
+      - mysql_database.present: keystone
+      - cmd.run: keystone-grant
+      - cmd.run: keystone-db-sync
+      - cmd.run: keystone-basic
 
 /etc/keystone:
   file:
     - recurse
     - source: salt://openstack/keystone
     - template: jinja
+    - watch:
+      - pkg.installed: keystone
     - defaults:
         openstack_internal_address: {{ pillar['openstack']['openstack_internal_address'] }}
         openstack_public_address: {{ pillar['openstack']['openstack_public_address'] }}
