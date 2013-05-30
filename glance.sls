@@ -1,5 +1,6 @@
 include:
   - openstack.repo
+  - openstack.mysql
 
 glance-pkgs:
   pkg.installed:
@@ -9,23 +10,18 @@ glance-pkgs:
       - glance-api
       - glance-common
       - glance-registry
+      - python-glanceclient
     - require:
-      - pkg.installed: mysql-server
+      - service.running: mysql
       - pkg.installed: python-mysqldb
       - pkg.installed: rabbitmq-server
-
-glance-db-sync:
-  cmd:
-    - run
-    - name: glance-manage --config-dir=/etc/glance db_sync
-    - require:
-      - file.recurse: /etc/glance
-      - pkg.installed: mysql-server
-      - pkg.installed: glance-common
       - mysql_database.present: glance
-      - cmd.run: glance-grant
-    - watch:
-      - service: glance-services
+      - mysql_grants.present: glance
+      - mysql_user.present: glance
+      - cmd.run: glance-grant-wildcard
+      - cmd.run: glance-grant-localhost
+      - cmd.run: glance-grant-star
+
 
 glance-services:
   service:
@@ -35,32 +31,26 @@ glance-services:
       - glance-api
       - glance-registry
     - require:
-      - pkg.installed: glance-api
-      - pkg.installed: glance-registry
-      - mysql_database.present: glance
-      - cmd.run: glance-grant
+      - pkg.installed: glance-pkgs
     - watch:
       - file.recurse: /etc/glance
 
-glance-images:
-  cmd.script:
-    - source: salt://openstack/scripts/init-glance
-    - template: jinja
-    - name: init-glance
-  require:
-    - cmd.run: glance-grant
-    - service: glance-services
-    - cmd.run: glance-db-sync
-    - service.running: glance-services
+glance-setup:
+  cmd.run:
+    - unless: test -f /etc/setup-done-glance
+    - name: /root/scripts/glance-setup.sh
+    - require:
+      - file.recurse: /etc/glance
+      - file.recurse: /root/scripts
+      - pkg.installed: glance-pkgs
     
-
 /etc/glance:
   file:
     - recurse
     - source: salt://openstack/glance
     - template: jinja
     - require:
-      - pkg.installed: glance-common
+      - pkg.installed: glance-pkgs
     - defaults:
         openstack_internal_address: {{ pillar['openstack']['openstack_internal_address'] }}
         openstack_admin_address: {{ pillar['openstack']['openstack_admin_address'] }}
@@ -88,3 +78,15 @@ glance-images:
         ec2_url: {{ pillar['openstack']['database_host'] }}
         cc_host: {{ pillar['openstack']['database_host'] }}
         database_host: {{ pillar['openstack']['database_host'] }}
+
+#glance-db-sync:
+#  cmd:
+#    - run
+#    - name: glance-manage --config-dir=/etc/glance db_sync
+#    - require:
+#      - file.recurse: /etc/glance
+#      - pkg.installed: glance-pkgs
+#      - mysql_database.present: glance
+#      - cmd.run: glance-grant
+#    - watch:
+#      - service: glance-services

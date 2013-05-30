@@ -10,4 +10,9 @@ private-openstack-repo:
     - keyserver: keyserver.ubuntu.com
     - required:
       - pkg.installed: ubuntu-cloud-keyring
+      - pkg.installed: keystone-pkgs
+      - pkg.installed: glance-pkgs
+      - pkg.installed: nova-pkgs
+      - pkg.installed: cinder-pkgs
+      - pkg.installed: dashboard-pkgs
 

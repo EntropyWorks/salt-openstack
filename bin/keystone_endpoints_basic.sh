@@ -11,18 +11,18 @@
 #
 
 # Host address
-HOST_IP={{ pillar['openstack']['keystone_host'] }}
-EXT_HOST_IP={{ pillar['openstack']['openstack_public_address'] }}
+HOST_IP=${HOST_IP:-10.10.10.51}
+EXT_HOST_IP=${EXT_HOST_IP:-192.168.100.51}
 
 # MySQL definitions
-MYSQL_USER=keystone
+MYSQL_USER=${MYSQL_USER:-keystoneUser}
 MYSQL_DATABASE=keystone
-MYSQL_HOST=$HOST_IP
-MYSQL_PASSWORD={{ pillar['openstack']['database_password'] }}
+MYSQL_HOST=${MYSQL_HOST:-$HOST_IP}
+MYSQL_PASSWORD=${MYSQL_PASSWORD:-keystonePass}
 
 # Keystone definitions
-KEYSTONE_REGION=RegionOne
-export SERVICE_TOKEN={{ pillar['openstack']['admin_token'] }}
+KEYSTONE_REGION=${KEYSTONE_REGION:-RegionOne}
+export SERVICE_TOKEN=${SERVICE_TOKEN:-ADMIN}
 export SERVICE_ENDPOINT="http://${HOST_IP}:35357/v2.0"
 
 while getopts "u:D:p:m:K:R:E:T:vh" opt; do
@@ -104,6 +104,7 @@ keystone service-create --name cinder --type volume --description 'OpenStack Vol
 keystone service-create --name glance --type image --description 'OpenStack Image Service'
 keystone service-create --name keystone --type identity --description 'OpenStack Identity'
 keystone service-create --name ec2 --type ec2 --description 'OpenStack EC2 service'
+keystone service-create --name quantum --type network --description 'OpenStack Networking service'
 
 create_endpoint () {
   case $1 in
@@ -122,10 +123,13 @@ create_endpoint () {
     ec2)
     keystone endpoint-create --region $KEYSTONE_REGION --service-id $2 --publicurl 'http://'"$EXT_HOST_IP"':8773/services/Cloud' --adminurl 'http://'"$HOST_IP"':8773/services/Admin' --internalurl 'http://'"$HOST_IP"':8773/services/Cloud'
     ;;
+    network)
+    keystone endpoint-create --region $KEYSTONE_REGION --service-id $2 --publicurl 'http://'"$EXT_HOST_IP"':9696/' --adminurl 'http://'"$HOST_IP"':9696/' --internalurl 'http://'"$HOST_IP"':9696/'
+    ;;
   esac
 }
 
-for i in compute volume image object-store identity ec2; do
+for i in compute volume image object-store identity ec2 network; do
   id=`mysql -h "$MYSQL_HOST" -u "$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE" -ss -e "SELECT id FROM service WHERE type='"$i"';"` || exit 1
   create_endpoint $i $id
 done

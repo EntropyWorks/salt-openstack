@@ -1,28 +1,24 @@
-openstack-pkgs:
-  pkg.installed:
-    - names:
-      - nova-compute
-      - nova-network
-      - dnsmasq-utils
+include:
+  - openstack.repo
+  - openstack.nova-compute
 
-nova-services:
-  service:
-    - running
-    - enable: True
-    - names:
-      - nova-compute
-      - nova-network
-    - require:
-      - pkg.installed: nova-compute
-      - pkg.installed: nova-network
+python-eventlet:
+  pkg.installed
 
-/etc/nova:
-file:
-  - recurse
-  - source: salt://openstack/nova
-  - template: jinja
-  - require:
-    - pkg.installed: nova
-  - watch_in:
-    - service: nova-services
+python-mysqldb:
+  pkg.installed
 
+/root/scripts:
+  file:
+    - recurse
+    - source: salt://openstack/bin
+    - file_mode: 755
+    - template: jinja
+    - defaults:
+      openstack_internal_address: {{ pillar['openstack']['openstack_internal_address'] }}
+      openstack_public_address: {{ pillar['openstack']['openstack_public_address'] }}
+      admin_password: {{ pillar['openstack']['admin_password'] }} 
+      service_password: {{ pillar['openstack']['service_password']}} 
+      service_token: {{ pillar['openstack']['admin_token'] }}
+      database_password: {{ pillar['openstack']['database_password'] }}
+      database_host: {{ pillar['openstack']['database_host'] }}
