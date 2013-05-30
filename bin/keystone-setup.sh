@@ -47,7 +47,8 @@ if [ ! -f /etc/setup-done-keystone ] ; then
 
 	echo " Setting up Keystone Endpoints"
 #	/root/scripts/keystone_endpoints_basic.sh
-	/root/scripts/sample_data.sh
+#	/root/scripts/sample_data.sh
+	/root/scripts/reset-keystone
 
 	touch "/etc/setup-done-keystone"
 
