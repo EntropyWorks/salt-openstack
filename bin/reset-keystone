@@ -48,7 +48,7 @@
 # demo                 admin     admin
 # demo                 demo      Member,sysadmin,netadmin
 # invisible_to_admin   demo      Member
-set -eux
+set -eu
 
 ENABLE_ENDPOINTS=yes
 ENABLE_QUANTUM=yes
@@ -68,7 +68,7 @@ CONTROLLER_INTERNAL_ADDRESS=${CONTROLLER_INTERNAL_ADDRESS:-localhost}
 KEYSTONE_REGION="${KEYSTONE_REGION:-RegionOne}"
 
 KEYSTONE_CONF=${KEYSTONE_CONF:-/etc/keystone/keystone.conf}
-EC2RC="$KEYSTONE_CONF/ec2rc"
+EC2RC="ec2rc"
 
 # Please set these, they are ONLY SAMPLE PASSWORDS!
 
@@ -77,14 +77,6 @@ if [[ -r "$KEYSTONE_CONF" ]]; then
     CONFIG_SERVICE_TOKEN=$(sed 's/[[:space:]]//g' $KEYSTONE_CONF | grep ^admin_token= | cut -d'=' -f2)
     CONFIG_ADMIN_PORT=$(sed 's/[[:space:]]//g' $KEYSTONE_CONF | grep ^admin_port= | cut -d'=' -f2)
 fi
-
-echo "########################################"
-echo "########################################"
-echo "########################################"
-echo ">>>>>>>>>>THIS IS MY SERVICE TOKEN: $CONFIG_SERVICE_TOKEN"
-echo "########################################"
-echo "########################################"
-echo "########################################"
 
 export SERVICE_TOKEN=${SERVICE_TOKEN:-$CONFIG_SERVICE_TOKEN}
 if [[ -z "$SERVICE_TOKEN" ]]; then

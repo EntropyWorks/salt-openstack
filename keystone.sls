@@ -54,46 +54,5 @@ keystone-setup:
         admin_token: {{ pillar['openstack']['admin_token'] }}
         database_password: {{ pillar['openstack']['database_password'] }}
         database_host: {{ pillar['openstack']['database_host'] }}
+        nova_node_availability_zone: {{ pillar['openstack']['nova_node_availability_zone'] }}
 
-#keystone-setup:
-#  cmd.run:
-#    - name: keystone-manage --config-file /etc/keystone/keystone.conf db_sync
-#    - require:
-#      - pkg.installed: keystone
-#      - mysql_database.present: keystone
-#      - cmd.run: keystone-grant
-#    - watch:
-#      - file: /etc/keystone
-#
-#keystone-basic:
-#  cmd.run:
-#    - name: /root/scripts/keystone_basic.sh
-#    - require:
-#      - file: /etc/keystone
-#      - pkg.installed: keystone
-#      - mysql_database.present: keystone
-#      - cmd.run: keystone-grant
-#      - cmd.run: keystone-setup
-#
-#keystone-endpoints:
-#  cmd.run:
-#    - name: /root/scripts/keystone_endpoints_basic.sh
-#    - require:
-#      - file: /etc/keystone
-#      - pkg.installed: keystone
-#      - mysql_database.present: keystone
-#      - cmd.run: keystone-grant
-#      - cmd.run: keystone-setup
-#      - cmd.run: keystone-basic
-
-#keystone-setup:
-#  cmd.script:
-#    - unless: test -f /etc/setup-done-keystone
-#    - name: salt://openstack/scripts/keystone-setup.sh
-#    - require:
-#      - service.running: mysql
-#      - pkg.installed: keystone
-#      - file: /etc/keystone
-#      - service.restart: keystone
-#    - context:
-#      - openstack: {{ pillar['openstack'] }}

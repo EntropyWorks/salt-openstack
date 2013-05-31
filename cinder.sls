@@ -9,8 +9,11 @@ cinder-pkgs:
       - cinder-common
       - cinder-scheduler
       - cinder-volume
+      - iscsitarget 
+      - open-iscsi 
+      - iscsitarget-dkms
     - require:
-      - pkg.installed: mysql-server
+      - service.running: mysql
       - pkg.installed: python-mysqldb
       - pkg.installed: rabbitmq-server
       - mysql_database.present: cinder

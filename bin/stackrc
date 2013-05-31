@@ -3,5 +3,6 @@ export OS_PASSWORD={{ pillar['openstack']['admin_password'] }}
 export OS_AUTH_URL=http://{{ pillar['openstack']['openstack_public_address'] }}:5000/v2.0
 export OS_USERNAME=admin
 export OS_TENANT_NAME=admin
+export OS_REGION_NAME={{ pillar['openstack']['nova_node_availability_zone'] }}
 export COMPUTE_API_VERSION=1.1
 export OS_NO_CACHE=True

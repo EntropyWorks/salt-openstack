@@ -32,6 +32,7 @@ glance-services:
       - glance-registry
     - require:
       - pkg.installed: glance-pkgs
+      - service.running: mysql
     - watch:
       - file.recurse: /etc/glance
 
@@ -41,7 +42,7 @@ glance-setup:
     - name: /root/scripts/glance-setup.sh
     - require:
       - file.recurse: /etc/glance
-      - file.recurse: /root/scripts
+      - service.running: mysql
       - pkg.installed: glance-pkgs
     
 /etc/glance:
@@ -51,6 +52,7 @@ glance-setup:
     - template: jinja
     - require:
       - pkg.installed: glance-pkgs
+      - file.recurse: /root/scripts
     - defaults:
         openstack_internal_address: {{ pillar['openstack']['openstack_internal_address'] }}
         openstack_admin_address: {{ pillar['openstack']['openstack_admin_address'] }}

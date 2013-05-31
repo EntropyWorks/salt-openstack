@@ -7,9 +7,9 @@ apache2:
     - enable: True
     - restart: True
     - require:
-      - pkg.installed: python-django-horizon
+      - pkg.installed: openstack-dashboard
     - watch:
-      - pkg: python-django-horizon
+      - pkg: dashboard-pkgs
 
 dashboard-pkgs:
     pkg.installed:
@@ -17,4 +17,5 @@ dashboard-pkgs:
       - names:
         - apache2
         - apache2-utils
-        - python-django-horizon
+        - openstack-dashboard
+        - memcached
