@@ -1,3 +1,6 @@
+include:
+  - openstack.root-scripts
+
 /etc/nova:
   file:
     - recurse
@@ -5,6 +8,7 @@
     - template: jinja
     - required:
       - pkg.installed: nova-pkgs
+      - pkgrepo: private-openstack-repo
     - defaults:
         nova_flat_network_dhcp_start: {{ pillar['openstack']['nova_flat_network_dhcp_start'] }}
         openstack_internal_address: {{ pillar['openstack']['openstack_internal_address'] }}
@@ -16,7 +20,6 @@
         keystone_host: {{ pillar['openstack']['keystone_host'] }}
         glance_host: {{ pillar['openstack']['glance_host'] }}
         nova_host: {{ pillar['openstack']['openstack_public_address'] }}
-        nova_network_private_interface: {{ pillar['openstack']['nova_network_private_interface'] }}
         nova_network_private_interface: {{ pillar['openstack']['nova_network_private_interface'] }}
         nova_node_availability_zone: {{ pillar['openstack']['nova_node_availability_zone'] }}
         nova_network_flat_interface: {{ pillar['openstack']['nova_network_flat_interface'] }}

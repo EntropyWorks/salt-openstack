@@ -1,7 +1,7 @@
 include:
-  - openstack.repo
   - openstack.mysql
   - openstack.nova-config
+  - openstack.root-scripts
 
 nova-pkgs:
   pkg.installed:

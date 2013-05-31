@@ -1,6 +1,6 @@
 include:
-  - openstack.repo
   - openstack.nova-compute
+  - openstack.root-scripts
 
 python-eventlet:
   pkg.installed
@@ -8,17 +8,18 @@ python-eventlet:
 python-mysqldb:
   pkg.installed
 
-/root/scripts:
-  file:
-    - recurse
-    - source: salt://openstack/bin
-    - file_mode: 755
-    - template: jinja
-    - defaults:
-      openstack_internal_address: {{ pillar['openstack']['openstack_internal_address'] }}
-      openstack_public_address: {{ pillar['openstack']['openstack_public_address'] }}
-      admin_password: {{ pillar['openstack']['admin_password'] }} 
-      service_password: {{ pillar['openstack']['service_password']}} 
-      service_token: {{ pillar['openstack']['admin_token'] }}
-      database_password: {{ pillar['openstack']['database_password'] }}
-      database_host: {{ pillar['openstack']['database_host'] }}
+ubuntu-cloud-keyring:
+  pkg.installed
+
+private-openstack-repo:
+  pkgrepo.managed:
+    - name: "deb http://ubuntu-cloud.archive.canonical.com/ubuntu precise-updates/grizzly main"
+    - human_name: Openstack Ubuntu Archive
+    - file: /etc/apt/sources.list.d/openstack-ubuntu-archive.list
+    - keyid: 5EDB1B62EC4926EA
+    - keyserver: keyserver.ubuntu.com
+    - required:
+      - pkg.installed: ubuntu-cloud-keyring
+    - require_in:
+      - pkg.installed: ubuntu-cloud-keyring
+      - pkg.installed: nova-pkgs

@@ -1,11 +1,11 @@
 include:
-  - openstack.repo
   - openstack.mysql
   - openstack.keystone
   - openstack.nova-controller
   - openstack.glance
   - openstack.cinder
   - openstack.dashboard
+  - openstack.root-scripts
 
 debconf-utils:
   pkg.installed
@@ -19,37 +19,23 @@ python-mysqldb:
 rabbitmq-server:
  pkg.installed
 
+ubuntu-cloud-keyring:
+  pkg.installed
 
-/root/scripts:
-  file:
-    - recurse
-    - source: salt://openstack/bin
-    - file_mode: 755
-    - template: jinja
-    - defaults:
-      openstack_internal_address: {{ pillar['openstack']['openstack_internal_address'] }}
-      openstack_public_address: {{ pillar['openstack']['openstack_public_address'] }}
-      admin_password: {{ pillar['openstack']['admin_password'] }}
-      service_password: {{ pillar['openstack']['service_password']}}
-      service_token: {{ pillar['openstack']['admin_token'] }}
-      database_password: {{ pillar['openstack']['database_password'] }}
-      keystone_host: {{ pillar['openstack']['keystone_host'] }}
-      glance_host: {{ pillar['openstack']['glance_host'] }}
-      nova_host: {{ pillar['openstack']['openstack_public_address'] }}
-      nova_network_private_interface: {{ pillar['openstack']['nova_network_private_interface'] }}
-      rabbit_host: {{ pillar['openstack']['rabbit_host'] }}
-      rabbit_password: {{ pillar['openstack']['rabbit_password'] }}
-      nova_network_public_interface: {{ pillar['openstack']['nova_network_public_interface'] }}
-      fixed_range: {{ pillar['openstack']['nova_network_private'] }}
-      my_ip: {{ pillar['openstack']['openstack_internal_address'] }}
-      nova_libvirt_type: {{ pillar['openstack']['nova_libvirt_type'] }}
-      nova_compute_driver: {{ pillar['openstack']['nova_compute_driver'] }}
-      nova_network_private: {{ pillar['openstack']['nova_network_private'] }}
-      quantum_host: {{ pillar['openstack']['database_host'] }}
-      s3_host: {{ pillar['openstack']['database_host'] }}
-      ec2_host: {{ pillar['openstack']['database_host'] }}
-      ec2_dmz_host: {{ pillar['openstack']['database_host'] }}
-      ec2_url: {{ pillar['openstack']['database_host'] }}
-      cc_host: {{ pillar['openstack']['database_host'] }}
-      database_host: {{ pillar['openstack']['database_host'] }}
-
+private-openstack-repo:
+  pkgrepo.managed:
+    - name: "deb http://ubuntu-cloud.archive.canonical.com/ubuntu precise-updates/grizzly main"
+    - human_name: Openstack Ubuntu Archive
+    - file: /etc/apt/sources.list.d/openstack-ubuntu-archive.list
+    - keyid: 5EDB1B62EC4926EA
+    - keyserver: keyserver.ubuntu.com
+    - required:
+      - pkg.installed: ubuntu-cloud-keyring
+    - require_in:
+      - pkg.installed: python-eventlet
+      - pkg.installed: ubuntu-cloud-keyring
+      - pkg.installed: nova-pkgs
+      - pkg.installed: glance-pkgs
+      - pkg.installed: cinder-pkgs
+      - pkg.installed: dashboard-pkgs
+      - pkg.installed: keystone-pkgs

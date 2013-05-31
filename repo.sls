@@ -1,3 +1,6 @@
+include:
+  - openstack.root-scripts
+
 ubuntu-cloud-keyring:
   pkg.installed
 
@@ -10,9 +13,10 @@ private-openstack-repo:
     - keyserver: keyserver.ubuntu.com
     - required:
       - pkg.installed: ubuntu-cloud-keyring
-      - pkg.installed: keystone-pkgs
-      - pkg.installed: glance-pkgs
+    - require_in:
+      - pkg.installed: ubuntu-cloud-keyring
       - pkg.installed: nova-pkgs
+      - pkg.installed: glance-pkgs
       - pkg.installed: cinder-pkgs
       - pkg.installed: dashboard-pkgs
-
+      - pkg.installed: keystone-pkgs

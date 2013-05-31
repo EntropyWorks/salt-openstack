@@ -1,6 +1,3 @@
-include:
-  - openstack.repo
-
 apache2:
   service:
     - running

@@ -1,8 +1,8 @@
 include:
   - openstack.mysql
-  - openstack.repo
+  - openstack.root-scripts
 
-keystone-pkg:
+keystone-pkgs:
   pkg:
     - name: keystone
     - installed

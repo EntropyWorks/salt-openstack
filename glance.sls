@@ -1,6 +1,6 @@
 include:
-  - openstack.repo
   - openstack.mysql
+  - openstack.root-scripts
 
 glance-pkgs:
   pkg.installed:

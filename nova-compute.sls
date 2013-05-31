@@ -1,6 +1,6 @@
 include:
-  - openstack.repo
   - openstack.nova-config
+  - openstack.root-scripts
 
 nova-pkgs:
   pkg.installed:

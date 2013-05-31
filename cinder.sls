@@ -1,5 +1,5 @@
 include:
-  - openstack.repo
+  - openstack.root-scripts
 
 cinder-pkgs:
   pkg.installed:
