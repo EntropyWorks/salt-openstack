@@ -52,6 +52,7 @@ cinder-setup:
     - source: salt://openstack/cinder
     - template: jinja
     - defaults:
+        cinder_host: {{ pillar['openstack']['cinder_host'] }}
         openstack_internal_address: {{ pillar['openstack']['openstack_internal_address'] }}
         openstack_public_address: {{ pillar['openstack']['openstack_public_address'] }}
         admin_password: {{ pillar['openstack']['admin_password'] }}
