@@ -1,0 +1,20 @@
+#!/bin/bash
+# Ugly but makes destroying my images quickly
+#
+#  ./reset-simple-test foobar 1 10
+#
+if [ -f stackrc ] ; then
+        source stackrc
+else
+        echo "You need to have a ../stackrc"
+        exit 1
+fi
+set -eux
+NAME=${1:-test}
+START=${2:-1}
+END=${3:-1}
+for i in $(seq -f "%04g" ${START} ${END} ) ;
+do
+        nova delete ${NAME}-${i}
+        sleep 2
+done

@@ -1,0 +1,49 @@
+#!/bin/bash
+#
+# Ugly, but lets you create some images to do a quick test
+#
+#  ./simple-test foobar 1 10
+#
+source ~/stackrc
+
+set -eubx
+NAME=${1:-test}
+START=${2:-1}
+END=${3:-1}
+FLAVOR=${4:-m1.small}
+IMAGE=${5:-precise-12.04.1-20130124}
+
+# Add a key to nova
+if ! $(nova keypair-list | grep -q " ${NAME} ") ; then
+        if [ ! -f ${NAME}.pem ] ; then
+                nova keypair-add ${NAME} > ${NAME}.pem
+                chmod 600 ${NAME}.pem
+        else
+                ssh-keygen -e -f ${NAME}.pem > ${NAME}-pub.pem
+                ssh-keygen -i -f ${NAME}-pub.pem > ${NAME}.pub
+                nova keypair-add ${NAME} --pub-key ${NAME}.pub
+        fi
+fi
+
+# Create images quickly
+COUNT=10
+TIME=1
+SLEEP=30
+for i in $(seq -f "%04g" ${START}  ${END}) ;
+do
+       if ((TIME++ / ${COUNT})) ; then
+                nova list
+                echo "Sleeping for ${SLEEP}"
+                sleep ${SLEEP}
+                TIME=0
+       fi
+
+		#--num-instances 10 \
+                #--user-data my-cloud-init.txt \
+        nova boot \
+                --image ${IMAGE} \
+                --flavor ${FLAVOR}  \
+                --key_name ${NAME} ${NAME}-${i} || { echo 'my_command failed' ; exit 1; }
+        sleep 5
+done
+nova list

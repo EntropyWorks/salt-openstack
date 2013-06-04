@@ -1,0 +1,82 @@
+#!/bin/bash
+set -x
+mysqladmin flush-hosts
+
+cd /etc/init.d/; for i in $( ls nova-* ); do sudo service $i stop; done
+cd /etc/init.d/; for i in $( ls keystone ); do sudo service $i stop; done
+cd /etc/init.d/; for i in $( ls cinder-* ); do sudo service $i stop; done
+cd /etc/init.d/; for i in $( ls glance-* ); do sudo service $i stop; done
+
+service rabbitmq-server stop
+
+ifconfig br100 down
+brctl delbr br100
+
+apt-get remove -y --purge rabbitmq-server
+
+apt-get remove -y --purge nova-api nova-cert nova-common \
+  nova-console nova-consoleauth nova-network nova-scheduler \
+  nova-common \
+  nova-network \
+  nova-api \
+  nova-cert \
+  novnc \
+  nova-consoleauth \
+  nova-scheduler \
+  nova-novncproxy \
+  nova-doc \
+  nova-conductor \
+  python-nova \
+  python-novaclient > /dev/null
+
+rm -rf /etc/nova
+
+
+apt-get remove -y --purge keystone python-keystone \
+  python-keystoneclient python-openstack-auth \
+  python-swiftclient > /dev/null
+
+rm -rf /etc/keystone
+rm -rf /var/lib/keystone
+
+
+apt-get remove -y --purge glance glance-api glance-common \
+  glance-registry python-glance python-glanceclient > /dev/null
+
+rm -rf /etc/glance
+rm -rf /var/lib/glance
+
+
+apt-get remove -y --purge cinder-api cinder-common cinder-scheduler \
+  cinder-volume python-cinder python-cinderclient > /dev/null
+
+rm -rf /etc/cinder
+rm -rf /var/lib/cinder
+
+mysql mysql --execute='select Host,User,Select_priv,Insert_priv,Update_priv,Delete_priv,Create_priv,Drop_priv,Grant_priv from user;'
+for i in nova keystone cinder glance quantum ; do
+        mysqladmin -f drop ${i} &> /dev/null
+        mysql mysql --execute="drop user '${i}';" &> /dev/null
+        mysql mysql --execute="drop user '${i}'@'*'" &> /dev/null
+        mysql mysql --execute="drop user '${i}-star'@'*'" &> /dev/null
+        mysql mysql --execute="drop user '${i}'@'%'" &> /dev/null
+        mysql mysql --execute="drop user '${i}'@'localhost'" &> /dev/null
+done
+
+mysql mysql --execute='select Host,User,Select_priv,Insert_priv,Update_priv,Delete_priv,Create_priv,Drop_priv,Grant_priv from user;'
+mysqladmin flush-hosts
+
+apt-get -y autoremove
+
+rm -rf /var/log/cinder \
+  /var/log/nova \
+  /var/log/glance \
+  /var/log/upstart/nova* \
+  /var/log/upstart/cinder* \
+  /var/log/upstart/keystone* \
+  /tmp/keystone-signing-nova \
+  /etc/setup-done-* \
+  /var/lib/rabbitmq/mnesia \
+  /var/log/upstart/glance*
+
+#/etc/apt/sources.list.d/openstack-ubuntu-archive.list \
