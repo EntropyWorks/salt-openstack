@@ -7,16 +7,15 @@ nova-pkgs:
   pkg.installed:
     - fromreo: private-openstack-repo
     - names:
+      - nova-api 
       - nova-common
       - nova-network
-      - nova-api 
       - nova-cert
-      - novnc 
       - nova-consoleauth 
       - nova-scheduler 
       - nova-novncproxy
-      - nova-doc
       - nova-conductor
+      - nova-network
       - dnsmasq
       - dnsmasq-base
       - dnsmasq-utils  

@@ -9,8 +9,8 @@ cinder-pkgs:
       - cinder-common
       - cinder-scheduler
       - cinder-volume
-      - iscsitarget 
       - open-iscsi 
+      - iscsitarget
       - iscsitarget-dkms
     - require:
       - service.running: mysql

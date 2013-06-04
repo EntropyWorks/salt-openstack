@@ -1,0 +1,35 @@
+#!/bin/bash
+
+pushd /etc/init.d/; for i in $( ls nova-* ); do sudo service $i stop; done ; popd
+
+ifconfig br100 down
+brctl delbr br100
+
+apt-get remove --purge -y \
+        nova-api-metadata \
+        nova-common \
+        nova-compute \
+        nova-compute-kvm \
+        nova-conductor \
+        nova-network \
+        python-nova \
+	dnsmasq-utils \
+	dnsmasq-base \
+	dnsmasq \
+        python-novaclient
+
+apt-get -y autoremove
+
+rm -rf /etc/nova \
+        /var/log/nova \
+        /var/lib/nova/buckets \
+        /var/lib/nova/CA \
+        /var/lib/nova/images \
+        /var/lib/nova/instances \
+        /var/lib/nova/keys \
+        /var/lib/nova/networks \
+	/etc/libvirt/qemu/*.xml \
+	/etc/libvirt/nwfilter/nova-instance* \
+        /var/lib/nova/tmp
+
+find /var/lib/nova -print

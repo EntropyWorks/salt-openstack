@@ -4,15 +4,23 @@ apache2:
     - enable: True
     - restart: True
     - require:
-      - pkg.installed: openstack-dashboard
+      - pkg.installed: dashboard-needs
     - watch:
       - pkg: dashboard-pkgs
+
+
+dashboard-needs:
+  pkg.installed:
+    - names:
+      - memcached
+      - apache2
+      - apache2-utils
+      - libapache2-mod-wsgi
 
 dashboard-pkgs:
     pkg.installed:
       - fromreo: private-openstack-repo
       - names:
-        - apache2
-        - apache2-utils
-        - openstack-dashboard
-        - memcached
+        - python-django-horizon
+      - require:
+        - pkg.installed: dashboard-needs

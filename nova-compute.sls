@@ -10,10 +10,8 @@ nova-pkgs:
       - nova-compute
       - nova-network
       - nova-api-metadata
-      - open-iscsi
       - nova-novncproxy
-      - iscsitarget
-      - iscsitarget-dkms
+      - nova-conductor
       - dnsmasq
       - dnsmasq-base
       - dnsmasq-utils
