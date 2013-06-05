@@ -25,6 +25,7 @@
       nova_libvirt_type: {{ pillar['openstack']['nova_libvirt_type'] }}
       nova_compute_driver: {{ pillar['openstack']['nova_compute_driver'] }}
       nova_network_private: {{ pillar['openstack']['nova_network_private'] }}
+      nova_node_availability_zone: {{ pillar['openstack']['nova_node_availability_zone'] }}
       quantum_host: {{ pillar['openstack']['database_host'] }}
       s3_host: {{ pillar['openstack']['database_host'] }}
       ec2_host: {{ pillar['openstack']['database_host'] }}
