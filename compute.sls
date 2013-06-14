@@ -1,6 +1,7 @@
 include:
   - openstack.nova-compute
   - openstack.root-scripts
+  - openstack.haproxy
 
 python-eventlet:
   pkg.installed
