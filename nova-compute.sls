@@ -11,7 +11,6 @@ nova-pkgs:
       - nova-network
       - nova-api-metadata
       - nova-novncproxy
-      - nova-conductor
       - dnsmasq
       - dnsmasq-base
       - dnsmasq-utils
