@@ -33,3 +33,5 @@
       ec2_url: {{ pillar['openstack']['database_host'] }}
       cc_host: {{ pillar['openstack']['database_host'] }}
       database_host: {{ pillar['openstack']['database_host'] }}
+      fixed_net_gw: {{ pillar['openstack']['nova_fixed_net_gw'] }}
+      fixed_bridge: {{ pillar['openstack']['nova_fixed_bridge'] }}
