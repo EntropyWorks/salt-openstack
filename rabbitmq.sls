@@ -56,6 +56,25 @@ start_rabbit_service:
       - cmd: stop_rabbitmq_service
       - file: /var/lib/rabbitmq/.erlang.cookie
 
+{% if grains['host'] ==  pillar['openstack']['rabbit_master_node'] %}
+{% for rabbit_username, rabbit_password in pillar['openstack']['rabbit_users'].iteritems() -%}
+
+rabbit_user_{{ rabbit_username }}:
+  rabbitmq_user.present:
+    - name: {{ rabbit_username }}
+    - password: {{ rabbit_password }}
+    - force: True
+    - require:
+      - pkg: rabbitmq-server
+
+rabbit_user_permissions_{{ rabbit_username }}:
+  rabbitmq_vhost.present:
+    - name: /
+    - user:  {{ rabbit_username }}
+
+{% endfor %}
+{% endif %}
+
 {% if grains['host'] !=  pillar['openstack']['rabbit_master_node'] %}
 
 stop_rabbit_app:
