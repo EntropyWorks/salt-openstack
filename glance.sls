@@ -62,6 +62,8 @@ glance-setup:
         service_token: {{ pillar['openstack']['admin_token'] }}
         database_password: {{ pillar['openstack']['database_password'] }}
         keystone_host: {{ pillar['openstack']['keystone_host'] }}
+        keystone_auth_port: {{ pillar['openstack']['keystone_auth_port'] }}
+        keystone_auth_protocol: {{ pillar['openstack']['keystone_auth_protocol'] }}
         glance_host: {{ pillar['openstack']['glance_host'] }}
         nova_host: {{ pillar['openstack']['openstack_public_address'] }}
         nova_network_private_interface: {{ pillar['openstack']['nova_network_private_interface'] }}
