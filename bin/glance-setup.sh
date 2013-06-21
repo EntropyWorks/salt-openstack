@@ -19,6 +19,8 @@ function install_image {
     curl --proxy http://web-proxy.uswest.hpcloud.net:8080/ -L -o /root/images/$name.qcow2 "$url"
   fi
 
+  glance-manage db_sync
+
   if ! glance index | grep "$name"; then
     glance --verbose add name=$name is_public=True protected=True disk_format=qcow2 container_format=bare < /root/images/$name.qcow2
   fi

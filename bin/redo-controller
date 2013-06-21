@@ -76,6 +76,7 @@ rm -rf /var/log/cinder \
   /var/log/upstart/keystone* \
   /tmp/keystone-signing-nova \
   /etc/setup-done-* \
+  /var/lib/nova/nova.sqlite \
   /var/lib/rabbitmq/mnesia \
   /var/log/upstart/glance*
 

@@ -14,6 +14,8 @@
       service_token: {{ pillar['openstack']['admin_token'] }}
       database_password: {{ pillar['openstack']['database_password'] }}
       keystone_host: {{ pillar['openstack']['keystone_host'] }}
+      keystone_auth_port: {{ pillar['openstack']['keystone_auth_port'] }}
+      keystone_auth_protocol: {{ pillar['openstack']['keystone_auth_protocol'] }}
       glance_host: {{ pillar['openstack']['glance_host'] }}
       nova_host: {{ pillar['openstack']['openstack_public_address'] }}
       nova_network_private_interface: {{ pillar['openstack']['nova_network_private_interface'] }}
@@ -25,6 +27,7 @@
       nova_libvirt_type: {{ pillar['openstack']['nova_libvirt_type'] }}
       nova_compute_driver: {{ pillar['openstack']['nova_compute_driver'] }}
       nova_network_private: {{ pillar['openstack']['nova_network_private'] }}
+      nova_node_availability_zone: {{ pillar['openstack']['nova_node_availability_zone'] }}
       quantum_host: {{ pillar['openstack']['database_host'] }}
       s3_host: {{ pillar['openstack']['database_host'] }}
       ec2_host: {{ pillar['openstack']['database_host'] }}

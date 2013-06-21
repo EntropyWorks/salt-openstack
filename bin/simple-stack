@@ -40,6 +40,7 @@ do
 
 		#--num-instances 10 \
                 #--user-data my-cloud-init.txt \
+		#--availability-zone dbaas-aw2az2-v1:ps-aw2az2-dbcpu0002 \
         nova boot \
                 --image ${IMAGE} \
                 --flavor ${FLAVOR}  \

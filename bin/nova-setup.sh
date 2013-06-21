@@ -27,7 +27,7 @@ if [ ! -f /etc/setup-done-nova ] ; then
 	      --network_size {{ pillar['openstack']['nova_network_private_size'] }} --multi_host=T
 
 	echo " Creating floating IP"
-	nova-manage floating create {{  pillar['openstack']['nova_network_floating'] }} --pool=nova
+	nova-manage floating create {{  pillar['openstack']['nova_network_floating'] }} --pool="{{ nova_node_availability_zone }}"
 
 {% for delete_network in pillar['openstack']['nova_delete_floating'] %}	
 	echo " Removing {{ delete_network }}"
