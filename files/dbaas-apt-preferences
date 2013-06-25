@@ -1,0 +1,15 @@
+Package: *
+Pin: origin ubuntu-cloud.archive.canonical.com
+Pin-Priority: 900
+
+Package: *
+Pin: origin packages.uswest.hpcloud.net
+Pin-Priority: 500
+
+Package: *
+Pin: origin ppa.launchpad.net
+Pin-Priority: 300
+
+Package: *
+Pin: origin us.archive.ubuntu.com
+Pin-Priority: 100
