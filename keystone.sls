@@ -25,7 +25,6 @@ keystone-pkgs:
     - watch:
       - file: /etc/keystone
 
-
 keystone-setup:
   cmd.run:
     - unless: test -f /etc/setup-done-keystone
@@ -36,7 +35,6 @@ keystone-setup:
       - file.recurse: /etc/keystone
       - file.recurse: /root/scripts
       - service.restart: keystone
-
 
 /etc/keystone:
   file:
@@ -56,3 +54,32 @@ keystone-setup:
         database_host: {{ pillar['openstack']['database_host'] }}
         nova_node_availability_zone: {{ pillar['openstack']['nova_node_availability_zone'] }}
 
+#      - file.managed: keystone_ssl_key
+#      - file.managed: keystone_ssl_crt
+#
+#keystone_ssl_key:
+#  file.managed:
+#    - name: /etc/keystone/ssl/private/paas-deploy-ssl.key
+#    - source: salt://openstack/templates/paas-deploy-ssl.key.jinja
+#    - template: jinja
+#    - mode: 400
+#    - user: keystone 
+#    - group: keystone 
+#    - require:
+#      - user: keystone 
+#      - group: keystone 
+#      - file: /etc/keystone
+#
+#keystone_ssl_crt:
+#  file.managed:
+#    - name: /etc/keystone/ssl/certs/paas-deploy-ssl.crt
+#    - source: salt://openstack/templates/paas-deploy-ssl.crt.jinja
+#    - template: jinja
+#    - mode: 644
+#    - user: keystone 
+#    - service.restart: keystone
+#    - group: keystone 
+#    - require:
+#      - user: keystone 
+#      - group: keystone 
+#      - file: /etc/keystone

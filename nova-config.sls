@@ -38,3 +38,4 @@ include:
         ec2_url: {{ pillar['openstack']['database_host'] }}
         cc_host: {{ pillar['openstack']['database_host'] }}
         database_host: {{ pillar['openstack']['database_host'] }}
+        nova_dhcpbridge: {{ pillar['openstack']['nova_dhcpbridge'] }}

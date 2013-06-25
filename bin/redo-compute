@@ -27,6 +27,7 @@ rm -rf /etc/nova \
         /var/lib/nova/images \
         /var/lib/nova/instances \
         /var/lib/nova/keys \
+        /var/lib/nova/nova.sqlite \
         /var/lib/nova/networks \
 	/etc/libvirt/qemu/*.xml \
 	/etc/libvirt/nwfilter/nova-instance* \
