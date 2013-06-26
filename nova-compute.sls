@@ -28,3 +28,7 @@ nova-services:
     - watch:
       - file: /etc/nova
 
+/var/lib/nova/instances/_base/ephemeral:
+  file.managed:
+    - user: nova
+    - group: nova
