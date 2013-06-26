@@ -8,7 +8,6 @@ include:
     - template: jinja
     - required:
       - pkg.installed: nova-pkgs
-      - pkgrepo: private-openstack-repo
     - defaults:
         nova_flat_network_dhcp_start: {{ pillar['openstack']['nova_flat_network_dhcp_start'] }}
         openstack_internal_address: {{ pillar['openstack']['openstack_internal_address'] }}

@@ -4,7 +4,6 @@ include:
 
 glance-pkgs:
   pkg.installed:
-    - fromreo: private-openstack-repo
     - names:
       - glance
       - glance-api

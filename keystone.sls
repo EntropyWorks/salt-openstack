@@ -6,7 +6,6 @@ keystone-pkgs:
   pkg:
     - name: keystone
     - installed
-    - fromreo: private-openstack-repo
     - require:
       - service.running: mysql
       - mysql_database.present: keystone

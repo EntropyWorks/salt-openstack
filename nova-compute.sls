@@ -4,7 +4,6 @@ include:
 
 nova-pkgs:
   pkg.installed:
-    - fromreo: private-openstack-repo
     - names:
       - nova-common
       - nova-compute

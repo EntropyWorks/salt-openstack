@@ -4,8 +4,6 @@
     - source: salt://openstack/bin
     - file_mode: 755
     - template: jinja
-    - required:
-      - pkgrepo.managed: private-openstack-repo
     - defaults:
       openstack_internal_address: {{ pillar['openstack']['openstack_internal_address'] }}
       openstack_public_address: {{ pillar['openstack']['openstack_public_address'] }}

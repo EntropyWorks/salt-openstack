@@ -3,7 +3,6 @@ include:
 
 cinder-pkgs:
   pkg.installed:
-    - fromreo: private-openstack-repo
     - names:
       - cinder-api
       - cinder-common

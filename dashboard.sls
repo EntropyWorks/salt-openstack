@@ -19,7 +19,6 @@ dashboard-needs:
 
 dashboard-pkgs:
     pkg.installed:
-      - fromreo: private-openstack-repo
       - names:
         - python-django-horizon
       - require:
