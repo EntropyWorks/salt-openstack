@@ -20,6 +20,8 @@ include:
         keystone_auth_port: {{ pillar['openstack']['keystone_auth_port'] }}
         keystone_auth_protocol: {{ pillar['openstack']['keystone_auth_protocol'] }}
         glance_host: {{ pillar['openstack']['glance_host'] }}
+        glance_protocol: {{ pillar['openstack']['glance_protocol'] }}
+        glance_port: {{ pillar['openstack']['glance_port'] }}
         nova_host: {{ pillar['openstack']['openstack_public_address'] }}
         nova_network_private_interface: {{ pillar['openstack']['nova_network_private_interface'] }}
         nova_node_availability_zone: {{ pillar['openstack']['nova_node_availability_zone'] }}

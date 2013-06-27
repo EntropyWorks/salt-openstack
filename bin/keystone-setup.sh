@@ -3,7 +3,7 @@
 
 export NOVA_VERSION=1.1
 export OS_PASSWORD={{ pillar['openstack']['admin_password'] }}
-export OS_AUTH_URL=http://{{ pillar['openstack']['openstack_public_address'] }}:5000/v2.0
+export OS_AUTH_URL={{ pillar['openstack']['keystone_auth_protocol'] }}://{{ pillar['openstack']['openstack_public_address'] }}:5000/v2.0
 export OS_USERNAME=admin
 export OS_TENANT_NAME=admin
 export OS_REGION_NAME={{ pillar['openstack']['nova_node_availability_zone'] }}
@@ -17,9 +17,19 @@ export MYSQL_DATABASE=keystone
 export MYSQL_HOST="{{ pillar['openstack']['database_host'] }}"
 export MYSQL_PASSWORD="{{ pillar['openstack']['database_password'] }}"
 export KEYSTONE_REGION="${KEYSTONE_REGION:-RegionOne}"
+export KEYSTONE_AUTH_PORT="{{ pillar['openstack']['keystone_auth_port'] }}"
+export KEYSTONE_AUTH_PROTOCOL="{{ pillar['openstack']['keystone_auth_protocol'] }}"
 export SERVICE_TOKEN="{{ pillar['openstack']['admin_token'] }}"
-export SERVICE_ENDPOINT="http://${HOST_IP}:35357/v2.0"
+export SERVICE_ENDPOINT="${KEYSTONE_AUTH_PROTOCOL}://${HOST_IP}:${KEYSTONE_AUTH_PORT}/v2.0"
 export SERVICE_TENANT_NAME=${SERVICE_TENANT_NAME:-service}
+export NOVA_PROTOCOL="{{ pillar['openstack']['nova_protocol'] }}"
+export NOVA_EC2_PORT="{{ pillar['openstack']['nova_ec2_port'] }}"
+export NOVA_PORT="{{ pillar['openstack']['nova_port'] }}"
+export GLANCE_PROTOCOL="{{ pillar['openstack']['glance_protocol'] }}"
+export GLANCE_PORT="{{ pillar['openstack']['glance_port'] }}"
+export CINDER_PROTOCOL="{{ pillar['openstack']['cinder_protocol'] }}"
+export CINDER_PORT="{{ pillar['openstack']['cinder_port'] }}"
+
 
 export CONTROLLER_PUBLIC_ADDRESS="{{ pillar['openstack']['openstack_public_address'] }}"
 export CONTROLLER_ADMIN_ADDRESS="{{ pillar['openstack']['openstack_admin_address'] }}"
