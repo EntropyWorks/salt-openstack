@@ -85,7 +85,7 @@ if [[ -z "$SERVICE_TOKEN" ]]; then
     exit 1
 fi
 
-export SERVICE_ENDPOINT=${SERVICE_ENDPOINT:-http://$CONTROLLER_PUBLIC_ADDRESS:${CONFIG_ADMIN_PORT:-35357}/v2.0}
+export SERVICE_ENDPOINT=${SERVICE_ENDPOINT:-https://$CONTROLLER_PUBLIC_ADDRESS:${CONFIG_ADMIN_PORT:-35357}/v2.0}
 
 function get_id () {
     echo `"$@" | grep ' id ' | awk '{print $4}'`
@@ -147,9 +147,9 @@ keystone user-role-add --tenant-id $SERVICE_TENANT \
                        --role-id $ADMIN_ROLE
 if [[ -n "$ENABLE_ENDPOINTS" ]]; then
     keystone endpoint-create --region $KEYSTONE_REGION --service-id $NOVA_SERVICE \
-        --publicurl "http://$CONTROLLER_PUBLIC_ADDRESS:\$(compute_port)s/v2/\$(tenant_id)s" \
-        --adminurl "http://$CONTROLLER_ADMIN_ADDRESS:\$(compute_port)s/v2/\$(tenant_id)s" \
-        --internalurl "http://$CONTROLLER_INTERNAL_ADDRESS:\$(compute_port)s/v2/\$(tenant_id)s"
+        --publicurl "$NOVA_PROTOCOL://$CONTROLLER_PUBLIC_ADDRESS:\$(compute_port)s/v2/\$(tenant_id)s" \
+        --adminurl "$NOVA_PROTOCOL://$CONTROLLER_ADMIN_ADDRESS:\$(compute_port)s/v2/\$(tenant_id)s" \
+        --internalurl "$NOVA_PROTOCOL://$CONTROLLER_INTERNAL_ADDRESS:\$(compute_port)s/v2/\$(tenant_id)s"
 fi
 
 EC2_SERVICE=$(get_id \
@@ -158,9 +158,9 @@ keystone service-create --name=ec2 \
                         --description="EC2 Compatibility Layer")
 if [[ -n "$ENABLE_ENDPOINTS" ]]; then
     keystone endpoint-create --region $KEYSTONE_REGION --service-id $EC2_SERVICE \
-        --publicurl "http://$CONTROLLER_PUBLIC_ADDRESS:8773/services/Cloud" \
-        --adminurl "http://$CONTROLLER_ADMIN_ADDRESS:8773/services/Admin" \
-        --internalurl "http://$CONTROLLER_INTERNAL_ADDRESS:8773/services/Cloud"
+        --publicurl "$NOVA_PROTOCOL://$CONTROLLER_PUBLIC_ADDRESS:$NOVA_EC2_PORT/services/Cloud" \
+        --adminurl "$NOVA_PROTOCOL://$CONTROLLER_ADMIN_ADDRESS:$NOVA_EC2_PORT/services/Admin" \
+        --internalurl "$NOVA_PROTOCOL://$CONTROLLER_INTERNAL_ADDRESS:$NOVA_EC2_PORT/services/Cloud"
 fi
 
 GLANCE_SERVICE=$(get_id \
@@ -176,9 +176,9 @@ keystone user-role-add --tenant-id $SERVICE_TENANT \
                        --role-id $ADMIN_ROLE
 if [[ -n "$ENABLE_ENDPOINTS" ]]; then
     keystone endpoint-create --region $KEYSTONE_REGION --service-id $GLANCE_SERVICE \
-        --publicurl "http://$CONTROLLER_PUBLIC_ADDRESS:9292/v1" \
-        --adminurl "http://$CONTROLLER_ADMIN_ADDRESS:9292/v1" \
-        --internalurl "http://$CONTROLLER_INTERNAL_ADDRESS:9292/v1"
+        --publicurl "$GLANCE_PROTOCOL://$CONTROLLER_PUBLIC_ADDRESS:$GLANCE_PORT/v1" \
+        --adminurl "$GLANCE_PROTOCOL://$CONTROLLER_ADMIN_ADDRESS:$GLANCE_PORT/v1" \
+        --internalurl "$GLANCE_PROTOCOL://$CONTROLLER_INTERNAL_ADDRESS:$GLANCE_PORT/v1"
 fi
 
 KEYSTONE_SERVICE=$(get_id \
@@ -187,9 +187,9 @@ keystone service-create --name=keystone \
                         --description="Keystone Identity Service")
 if [[ -n "$ENABLE_ENDPOINTS" ]]; then
     keystone endpoint-create --region $KEYSTONE_REGION --service-id $KEYSTONE_SERVICE \
-        --publicurl "http://$CONTROLLER_PUBLIC_ADDRESS:\$(public_port)s/v2.0" \
-        --adminurl "http://$CONTROLLER_ADMIN_ADDRESS:\$(admin_port)s/v2.0" \
-        --internalurl "http://$CONTROLLER_INTERNAL_ADDRESS:\$(public_port)s/v2.0"
+        --publicurl "$KEYSTONE_AUTH_PROTOCOL://$CONTROLLER_PUBLIC_ADDRESS:\$(public_port)s/v2.0" \
+        --adminurl "$KEYSTONE_AUTH_PROTOCOL://$CONTROLLER_ADMIN_ADDRESS:\$(admin_port)s/v2.0" \
+        --internalurl "$KEYSTONE_AUTH_PROTOCOL://$CONTROLLER_INTERNAL_ADDRESS:\$(public_port)s/v2.0"
 fi
 
 VOLUME_SERVICE=$(get_id \
@@ -206,9 +206,9 @@ keystone user-role-add --tenant-id $SERVICE_TENANT \
 
 if [[ -n "$ENABLE_ENDPOINTS" ]]; then
     keystone endpoint-create --region $KEYSTONE_REGION --service-id $VOLUME_SERVICE \
-        --publicurl "http://$CONTROLLER_PUBLIC_ADDRESS:8776/v1/\$(tenant_id)s" \
-        --adminurl "http://$CONTROLLER_ADMIN_ADDRESS:8776/v1/\$(tenant_id)s" \
-        --internalurl "http://$CONTROLLER_INTERNAL_ADDRESS:8776/v1/\$(tenant_id)s"
+        --publicurl "$CINDER_PROTOCOL://$CONTROLLER_PUBLIC_ADDRESS:$CINDER_PORT/v1/\$(tenant_id)s" \
+        --adminurl "$CINDER_PROTOCOL://$CONTROLLER_ADMIN_ADDRESS:$CINDER_PORT/v1/\$(tenant_id)s" \
+        --internalurl "$CINDER_PROTOCOL://$CONTROLLER_INTERNAL_ADDRESS:$CINDER_PORT/v1/\$(tenant_id)s"
 fi
 
 keystone service-create --name="horizon" \
