@@ -1,25 +1,28 @@
 rabbitmq-server:
   pkg.installed:
     - name: rabbitmq-server
-    - skip_verify: True
-    - require:
-      - file: /etc/apt/sources.list
 
-/etc/rabbitmq:
-  file:
-    - recurse
-    - source: salt://rabbitmq/config
+/etc/rabbitmq/rabbitmq.config:
+  file.managed:
+    - source: salt://openstack/rabbitmq/config/rabbitmq.config
     - template: jinja
-
-enable_mgmt_plugin:
-  cmd.run:
-    - name: rabbitmq-plugins enable rabbitmq_management
-    - user: root
     - require:
-      - pkg: rabbitmq-server
+      - file: /etc/rabbitmq/ssl
 
-{% for server_ip, server_hostname in pillar['openstack']['rabbit_servers_hostname'].iteritems() -%}
-#{% if server_hostname != grains['host'] %}
+/etc/rabbitmq/ssl:
+  file.recurse:
+    - source: salt://openstack/rabbitmq/config/ssl
+    - clean: True
+
+#enable_mgmt_plugin:
+#  cmd.run:
+#    - name: /usr/lib/rabbitmq/lib/rabbitmq_server-2.7.1/sbin/rabbitmq-plugins enable rabbitmq_management
+#    - user: root
+#    - require:
+#      - pkg: rabbitmq-server
+
+{% for server_ip, server_hostname in pillar['openstack']['rabbit_servers'].iteritems() -%}
+{% if server_hostname not in grains['host'] %}
 host_add_{{ server_hostname }}:
   host.present:
     - names:
@@ -29,49 +32,69 @@ host_add_{{ server_hostname }}:
     - require_in:
       - pkg: rabbitmq-server
 
-#{% endif %}
+{% endif %}
+
+{% if server_hostname in grains['host'] %}
+host_add_{{ server_hostname }}:
+  host.absent:
+    - names:
+      - {{ server_hostname }}.localdomain
+      - {{ server_hostname }}
+    - ip: {{ server_ip }}
+    - require_in:
+      - pkg: rabbitmq-server
+
+{% endif %}
 {% endfor %}
 
-stop_rabbitmq_service:
-  cmd.run:
-    - name: /etc/init.d/rabbitmq-server stop
-    - require:
-      - pkg: rabbitmq-server
-      - file: /etc/rabbitmq
+#stop_rabbitmq_service:
+#  service:
+#    - name: rabbitmq_server
+#    - dead
+#    - require:
+#      - pkg: rabbitmq-server
+#      - file: /etc/rabbitmq/rabbitmq.config
 
 /var/lib/rabbitmq/.erlang.cookie:
   file.managed:
-    - source: salt://rabbitmq/dot-erlang.sls
-    - require:
-      - cmd: stop_rabbitmq_service
+    - source: salt://openstack/rabbitmq/dot-erlang.sls
+    - template: jinja
+    - user: rabbitmq
+    - group: rabbitmq
+    - mode: 400
+#    - require:
+#      - service: stop_rabbitmq_service
 
-start_rabbit_service:
-  cmd.run:
-    - name: /etc/init.d/rabbitmq-server start
-    - require:
-      - cmd: stop_rabbitmq_service
-      - file: /var/lib/rabbitmq/.erlang.cookie
+#start_rabbit_service:
+#  service:
+#    - name: rabbitmq-server
+#    - running
+#    - require:
+#      - pkg: rabbitmq-server
+#      - service: stop_rabbitmq_service
+#      - file: /var/lib/rabbitmq/.erlang.cookie
 
-{% if grains['host'] ==  pillar['openstack']['rabbit_master_node'] %}
+{% if pillar['openstack']['rabbit_master_node'] in grains['host'] %}
 {% for rabbit_username, rabbit_password in pillar['openstack']['rabbit_users'].iteritems() -%}
 
-rabbit_user_{{ rabbit_username }}:
-  rabbitmq_user.present:
-    - name: {{ rabbit_username }}
-    - password: {{ rabbit_password }}
-    - force: True
-    - require:
-      - pkg: rabbitmq-server
-
-rabbit_user_permissions_{{ rabbit_username }}:
-  rabbitmq_vhost.present:
-    - name: /
-    - user:  {{ rabbit_username }}
-
+#rabbit_user_{{ rabbit_username }}:
+#  rabbitmq_user.present:
+#    - name: {{ rabbit_username }}
+#    - password: {{ rabbit_password }}
+#    - force: True
+#    - require:
+#      - pkg: rabbitmq-server
+#      - service: start_rabbit_service
+#
+#rabbit_user_permissions_{{ rabbit_username }}:
+#  rabbitmq_vhost.present:
+#    - name: /
+#    - user:  {{ rabbit_username }}
+#
 {% endfor %}
 {% endif %}
 
-{% if grains['host'] !=  pillar['openstack']['rabbit_master_node'] %}
+{% if pillar['openstack']['rabbit_master_node'] not in grains['host'] %}
 
 stop_rabbit_app:
   cmd.run:
