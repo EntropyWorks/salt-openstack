@@ -8,21 +8,17 @@ rabbitmq-server:
     - template: jinja
     - require:
       - file: /etc/rabbitmq/ssl
+      - pkg: rabbitmq-server
 
 /etc/rabbitmq/ssl:
   file.recurse:
     - source: salt://openstack/rabbitmq/config/ssl
     - clean: True
+    - require:
+      - pkg: rabbitmq-server
 
-#enable_mgmt_plugin:
-#  cmd.run:
-#    - name: /usr/lib/rabbitmq/lib/rabbitmq_server-2.7.1/sbin/rabbitmq-plugins enable rabbitmq_management
-#    - user: root
-#    - require:
-#      - pkg: rabbitmq-server
-
-{% for server_ip, server_hostname in pillar['openstack']['rabbit_servers'].iteritems() -%}
-{% if server_hostname not in grains['host'] %}
+{% for server_hostname, server_ip in pillar['openstack']['rabbit_servers'].iteritems() %}
+{% if server_hostname != grains['host'] %}
 host_add_{{ server_hostname }}:
   host.present:
     - names:
@@ -32,10 +28,8 @@ host_add_{{ server_hostname }}:
     - require_in:
       - pkg: rabbitmq-server
 
-{% endif %}
-
-{% if server_hostname in grains['host'] %}
-host_add_{{ server_hostname }}:
+{% else %}
+host_remove_{{ server_hostname }}:
   host.absent:
     - names:
       - {{ server_hostname }}.localdomain
@@ -45,15 +39,16 @@ host_add_{{ server_hostname }}:
       - pkg: rabbitmq-server
 
 {% endif %}
+
 {% endfor %}
 
-#stop_rabbitmq_service:
-#  service:
-#    - name: rabbitmq_server
-#    - dead
-#    - require:
-#      - pkg: rabbitmq-server
-#      - file: /etc/rabbitmq/rabbitmq.config
+stop_rabbitmq_service:
+  service:
+    - name: rabbitmq_server
+    - dead
+    - require:
+      - pkg: rabbitmq-server
+      - file: /etc/rabbitmq/rabbitmq.config
 
 /var/lib/rabbitmq/.erlang.cookie:
   file.managed:
@@ -62,46 +57,44 @@ host_add_{{ server_hostname }}:
     - user: rabbitmq
     - group: rabbitmq
     - mode: 400
-#    - require:
-#      - service: stop_rabbitmq_service
+    - require:
+      - service: stop_rabbitmq_service
 
-#start_rabbit_service:
-#  service:
-#    - name: rabbitmq-server
-#    - running
-#    - require:
-#      - pkg: rabbitmq-server
-#      - service: stop_rabbitmq_service
-#      - file: /var/lib/rabbitmq/.erlang.cookie
+start_rabbit_service:
+  service:
+    - name: rabbitmq-server
+    - running
+    - require:
+      - pkg: rabbitmq-server
+      - service: stop_rabbitmq_service
+      - file: /var/lib/rabbitmq/.erlang.cookie
 
-{% if pillar['openstack']['rabbit_master_node'] in grains['host'] %}
+
+{% if pillar['openstack']['rabbit_master_node'] == grains['host'] %}
 {% for rabbit_username, rabbit_password in pillar['openstack']['rabbit_users'].iteritems() -%}
 
-#rabbit_user_{{ rabbit_username }}:
-#  rabbitmq_user.present:
-#    - name: {{ rabbit_username }}
-#    - password: {{ rabbit_password }}
-#    - force: True
-#    - require:
-#      - pkg: rabbitmq-server
-#      - service: start_rabbit_service
-#
-#rabbit_user_permissions_{{ rabbit_username }}:
-#  rabbitmq_vhost.present:
-#    - name: /
-#    - user:  {{ rabbit_username }}
-#
+rabbit_user_{{ rabbit_username }}:
+  rabbitmq_user.present:
+    - name: {{ rabbit_username }}
+    - password: {{ rabbit_password }}
+    - force: True
+    - require:
+      - pkg: rabbitmq-server
+      - service: start_rabbit_service
+
+rabbit_user_permissions_{{ rabbit_username }}:
+  rabbitmq_vhost.present:
+    - name: /
+    - user:  {{ rabbit_username }}
+
 {% endfor %}
-{% endif %}
-
-{% if pillar['openstack']['rabbit_master_node'] not in grains['host'] %}
-
+{% else %}
 stop_rabbit_app:
   cmd.run:
     - name: rabbitmqctl stop_app
     - user: root
     - require:
-      - cmd: start_rabbit_service
+      - service: start_rabbit_service
       - file: /var/lib/rabbitmq/.erlang.cookie
 
 rabbit_reset:
@@ -110,17 +103,17 @@ rabbit_reset:
     - user: root
     - require:
       - cmd: stop_rabbit_app
-      - cmd: start_rabbit_service
+      - service: start_rabbit_service
       - file: /var/lib/rabbitmq/.erlang.cookie
 
 
 join_rabbit_cluster:
   cmd.run:
-    - name: rabbitmqctl join_cluster rabbit@{{pillar['openstack']['rabbit_master_node']}}
+    - name: rabbitmqctl join_cluster rabbit@{{ pillar['openstack']['rabbit_master_node'] }}
     - user: root
     - require:
       - cmd: rabbit_reset
-      - cmd: start_rabbit_service
+      - service: start_rabbit_service
       - file: /var/lib/rabbitmq/.erlang.cookie
 
 
@@ -130,7 +123,7 @@ start_rabbit_app:
     - user: root
     - require:
       - cmd: join_rabbit_cluster
-      - cmd: start_rabbit_service
+      - service: start_rabbit_service
       - file: /var/lib/rabbitmq/.erlang.cookie
 
 {% endif %}
