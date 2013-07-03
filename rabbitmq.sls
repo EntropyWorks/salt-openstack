@@ -42,13 +42,20 @@ host_remove_{{ server_hostname }}:
 
 {% endfor %}
 
+sleep_before_stop:
+  cmd.run:
+    - name: sleep 30
+    - user: root
+    - require:
+      - pkg: rabbitmq-server
+
 stop_rabbitmq_service:
-  service:
-    - name: rabbitmq_server
-    - dead
+  cmd.run:
+    - name: /etc/init.d/rabbitmq-server stop
     - require:
       - pkg: rabbitmq-server
       - file: /etc/rabbitmq/rabbitmq.config
+      - cmd: sleep_before_stop
 
 /var/lib/rabbitmq/.erlang.cookie:
   file.managed:
@@ -58,17 +65,23 @@ stop_rabbitmq_service:
     - group: rabbitmq
     - mode: 400
     - require:
-      - service: stop_rabbitmq_service
+      - cmd: stop_rabbitmq_service
+
+sleep_before_start:
+  cmd.run:
+    - name: sleep 30
+    - user: root
+    - require:
+      - cmd: stop_rabbitmq_service
 
 start_rabbit_service:
-  service:
-    - name: rabbitmq-server
-    - running
+  cmd.run:
+    - name: /etc/init.d/rabbitmq-server start
     - require:
       - pkg: rabbitmq-server
-      - service: stop_rabbitmq_service
+      - cmd: stop_rabbitmq_service
+      - cmd: sleep_before_start
       - file: /var/lib/rabbitmq/.erlang.cookie
-
 
 {% if pillar['openstack']['rabbit_master_node'] == grains['host'] %}
 {% for rabbit_username, rabbit_password in pillar['openstack']['rabbit_users'].iteritems() -%}
@@ -80,7 +93,7 @@ rabbit_user_{{ rabbit_username }}:
     - force: True
     - require:
       - pkg: rabbitmq-server
-      - service: start_rabbit_service
+      - cmd: start_rabbit_service
 
 rabbit_user_permissions_{{ rabbit_username }}:
   rabbitmq_vhost.present:
@@ -94,7 +107,7 @@ stop_rabbit_app:
     - name: rabbitmqctl stop_app
     - user: root
     - require:
-      - service: start_rabbit_service
+      - cmd: start_rabbit_service
       - file: /var/lib/rabbitmq/.erlang.cookie
 
 rabbit_reset:
@@ -103,9 +116,8 @@ rabbit_reset:
     - user: root
     - require:
       - cmd: stop_rabbit_app
-      - service: start_rabbit_service
+      - cmd: start_rabbit_service
       - file: /var/lib/rabbitmq/.erlang.cookie
-
 
 join_rabbit_cluster:
   cmd.run:
@@ -113,9 +125,8 @@ join_rabbit_cluster:
     - user: root
     - require:
       - cmd: rabbit_reset
-      - service: start_rabbit_service
+      - cmd: start_rabbit_service
       - file: /var/lib/rabbitmq/.erlang.cookie
-
 
 start_rabbit_app:
   cmd.run:
@@ -123,7 +134,8 @@ start_rabbit_app:
     - user: root
     - require:
       - cmd: join_rabbit_cluster
-      - service: start_rabbit_service
+      - cmd: start_rabbit_service
       - file: /var/lib/rabbitmq/.erlang.cookie
 
 {% endif %}
+
