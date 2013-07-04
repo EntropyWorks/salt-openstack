@@ -15,6 +15,14 @@ haproxy:
     - watch:
       - file: /etc/haproxy
 
+/etc/default/haproxy:
+  file.sed:
+    - before: 0
+    - after: 1
+    - limit: ^ENABLED=
+    - require:
+      - pkg.installed: haproxy
+
 /etc/haproxy:
   file:
     - recurse
