@@ -42,3 +42,5 @@ include:
         cc_host: {{ pillar['openstack']['database_host'] }}
         database_host: {{ pillar['openstack']['database_host'] }}
         nova_dhcpbridge: {{ pillar['openstack']['nova_dhcpbridge'] }}
+        openstack_ssl_cert: {{ pillar['openstack']['openstack_ssl_cert'] }}
+        openstack_ssl_key: {{ pillar['openstack']['openstack_ssl_key'] }}
