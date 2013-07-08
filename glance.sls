@@ -81,6 +81,8 @@ glance-setup:
         ec2_url: {{ pillar['openstack']['database_host'] }}
         cc_host: {{ pillar['openstack']['database_host'] }}
         database_host: {{ pillar['openstack']['database_host'] }}
+        openstack_ssl_cert: {{ pillar['openstack']['openstack_ssl_cert'] }}
+        openstack_ssl_key: {{ pillar['openstack']['openstack_ssl_key'] }}
 
 #glance-db-sync:
 #  cmd:
