@@ -52,35 +52,5 @@ keystone-setup:
         database_password: {{ pillar['openstack']['database_password'] }}
         database_host: {{ pillar['openstack']['database_host'] }}
         nova_node_availability_zone: {{ pillar['openstack']['nova_node_availability_zone'] }}
-        openstack_ssl_cert: {{ pillar['openstack']['openstack_ssl_cert'] }}
-        openstack_ssl_key: {{ pillar['openstack']['openstack_ssl_key'] }}
 
-#      - file.managed: keystone_ssl_key
-#      - file.managed: keystone_ssl_crt
-#
-#keystone_ssl_key:
-#  file.managed:
-#    - name: /etc/keystone/ssl/private/paas-deploy-ssl.key
-#    - source: salt://openstack/templates/paas-deploy-ssl.key.jinja
-#    - template: jinja
-#    - mode: 400
-#    - user: keystone 
-#    - group: keystone 
-#    - require:
-#      - user: keystone 
-#      - group: keystone 
-#      - file: /etc/keystone
-#
-#keystone_ssl_crt:
-#  file.managed:
-#    - name: /etc/keystone/ssl/certs/paas-deploy-ssl.crt
-#    - source: salt://openstack/templates/paas-deploy-ssl.crt.jinja
-#    - template: jinja
-#    - mode: 644
-#    - user: keystone 
-#    - service.restart: keystone
-#    - group: keystone 
-#    - require:
-#      - user: keystone 
-#      - group: keystone 
-#      - file: /etc/keystone
+

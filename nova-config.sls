@@ -34,13 +34,12 @@ include:
         nova_libvirt_type: {{ pillar['openstack']['nova_libvirt_type'] }}
         nova_compute_driver: {{ pillar['openstack']['nova_compute_driver'] }}
         nova_network_private: {{ pillar['openstack']['nova_network_private'] }}
-        quantum_host: {{ pillar['openstack']['database_host'] }}
-        s3_host: {{ pillar['openstack']['database_host'] }}
-        ec2_host: {{ pillar['openstack']['database_host'] }}
-        ec2_dmz_host: {{ pillar['openstack']['database_host'] }}
-        ec2_url: {{ pillar['openstack']['database_host'] }}
-        cc_host: {{ pillar['openstack']['database_host'] }}
+        quantum_host: {{ pillar['openstack']['openstack_internal_address'] }}
+        s3_host: {{ pillar['openstack']['openstack_internal_address'] }}
+        ec2_host: {{ pillar['openstack']['openstack_internal_address'] }}
+        ec2_dmz_host: {{ pillar['openstack']['openstack_internal_address'] }}
+        ec2_url: {{ pillar['openstack']['openstack_internal_address'] }}
+        cc_host: {{ pillar['openstack']['openstack_internal_address'] }}
         database_host: {{ pillar['openstack']['database_host'] }}
         nova_dhcpbridge: {{ pillar['openstack']['nova_dhcpbridge'] }}
-        openstack_ssl_cert: {{ pillar['openstack']['openstack_ssl_cert'] }}
-        openstack_ssl_key: {{ pillar['openstack']['openstack_ssl_key'] }}
+

@@ -24,7 +24,6 @@ export SERVICE_ENDPOINT="${KEYSTONE_AUTH_PROTOCOL}://${HOST_IP}:${KEYSTONE_AUTH_
 export SERVICE_TENANT_NAME=${SERVICE_TENANT_NAME:-service}
 export NOVA_PROTOCOL="{{ pillar['openstack']['nova_protocol'] }}"
 export NOVA_EC2_PORT="{{ pillar['openstack']['nova_ec2_port'] }}"
-export NOVA_PORT="{{ pillar['openstack']['nova_port'] }}"
 export GLANCE_PROTOCOL="{{ pillar['openstack']['glance_protocol'] }}"
 export GLANCE_PORT="{{ pillar['openstack']['glance_port'] }}"
 export CINDER_PROTOCOL="{{ pillar['openstack']['cinder_protocol'] }}"
