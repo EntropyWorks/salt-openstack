@@ -101,6 +101,14 @@ rabbit_user_permissions_{{ rabbit_username }}:
     - user:  {{ rabbit_username }}
 
 {% endfor %}
+
+enable_queue_mirroring:
+  cmd.run:
+    - name: rabbitmqctl set_policy ha-all '.*' '{"ha-mode":"all", "ha-sync-mode":"automatic"}'
+    - require:
+      - pkg: rabbitmq-server
+      - cmd: start_rabbit_service
+
 {% else %}
 stop_rabbit_app:
   cmd.run:
