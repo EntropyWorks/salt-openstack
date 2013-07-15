@@ -52,33 +52,9 @@ glance-setup:
     - require:
       - pkg.installed: glance-pkgs
       - file.recurse: /root/scripts
-    - defaults:
-        openstack_internal_address: {{ pillar['openstack']['openstack_internal_address'] }}
-        openstack_admin_address: {{ pillar['openstack']['openstack_admin_address'] }}
-        openstack_public_address: {{ pillar['openstack']['openstack_public_address'] }}
-        admin_password: {{ pillar['openstack']['admin_password'] }}
-        service_password: {{ pillar['openstack']['service_password']}}
-        service_token: {{ pillar['openstack']['admin_token'] }}
-        database_password: {{ pillar['openstack']['database_password'] }}
-        keystone_host: {{ pillar['openstack']['keystone_host'] }}
-        keystone_auth_port: {{ pillar['openstack']['keystone_auth_port'] }}
-        keystone_auth_protocol: {{ pillar['openstack']['keystone_auth_protocol'] }}
-        glance_host: {{ pillar['openstack']['glance_host'] }}
-        nova_host: {{ pillar['openstack']['openstack_public_address'] }}
-        nova_network_private_interface: {{ pillar['openstack']['nova_network_private_interface'] }}
-        rabbit_host: {{ pillar['openstack']['rabbit_host'] }}
-        rabbit_password: {{ pillar['openstack']['rabbit_password'] }}
-        nova_network_public_interface: {{ pillar['openstack']['nova_network_public_interface'] }}
-        fixed_range: {{ pillar['openstack']['nova_network_private'] }}
-        my_ip: {{ pillar['openstack']['openstack_internal_address'] }}
-        nova_libvirt_type: {{ pillar['openstack']['nova_libvirt_type'] }}
-        nova_compute_driver: {{ pillar['openstack']['nova_compute_driver'] }}
-        nova_network_private: {{ pillar['openstack']['nova_network_private'] }}
-        quantum_host: {{ pillar['openstack']['openstack_internal_address'] }}
-        s3_host: {{ pillar['openstack']['openstack_internal_address'] }}
-        ec2_host: {{ pillar['openstack']['openstack_internal_address'] }}
-        ec2_dmz_host: {{ pillar['openstack']['openstack_internal_address'] }}
-        ec2_url: {{ pillar['openstack']['openstack_internal_address'] }}
-        cc_host: {{ pillar['openstack']['openstack_internal_address'] }}
-        database_host: {{ pillar['openstack']['database_host'] }}
-
+    - context:
+        cinder: {{ pillar['cinder'] }}
+        glance: {{ pillar['glance'] }}
+        keystone: {{ pillar['keystone'] }}
+        nova: {{ pillar['nova'] }}
+        endpoints: {{ pillar['endpoints'] }}

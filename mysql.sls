@@ -23,7 +23,7 @@ mysql:
 {{ user }}:
   mysql_user.present:
     - host: "%"
-    - password: {{ pillar['openstack']['database_password'] }}
+    - password: {{ pillar['secrets'][{{ user }}]['db_password'] }}
     - require:
       - pkg: mysql-server
       - file.sed: /etc/mysql/my.cnf

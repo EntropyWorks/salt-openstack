@@ -33,7 +33,7 @@ if [ ! -f /etc/setup-done-glance ] ; then
 	echo " Nova Glance sync"
 	glance-manage --config-dir /etc/glance db_sync
 
-{% for name, url in pillar['openstack']['glance']['default_images'].iteritems() %}
+{% for name, url in pillar['glance']['default_images'].iteritems() %}
 	echo " Adding: {{ name }} : {{ url }}"
 	install_image "{{ name }}" "{{ url }}"
 {% endfor %}

@@ -2,16 +2,16 @@
 
 
 export NOVA_VERSION=1.1
-export OS_PASSWORD={{ pillar['openstack']['admin_password'] }}
-export OS_AUTH_URL={{ pillar['openstack']['keystone_auth_protocol'] }}://{{ pillar['openstack']['openstack_public_address'] }}:5000/v2.0
+export OS_PASSWORD={{ pillar['secrets']['admin_password'] }}
+export OS_AUTH_URL={{ pillar['keystone']['auth_protocol'] }}://{{ pillar['endpoints']['openstack_public_address'] }}:5000/v2.0
 export OS_USERNAME=admin
 export OS_TENANT_NAME=admin
-export OS_REGION_NAME={{ pillar['openstack']['nova_node_availability_zone'] }}
+export OS_REGION_NAME={{ pillar['endpoints']['nova']['availability_zone'] }}
 export COMPUTE_API_VERSION=1.1
 export OS_NO_CACHE=True
 
-export HOST_IP="{{ pillar['openstack']['openstack_admin_address'] }}"
-export EXT_HOST_IP="{{ pillar['openstack']['openstack_public_address'] }}"
+export HOST_IP="{{ pillar['enpoints']['openstack_admin_address'] }}"
+export EXT_HOST_IP="{{ pillar['endpoints']['openstack_public_address'] }}"
 export MYSQL_USER=keystone 
 export MYSQL_DATABASE=keystone
 export MYSQL_HOST="{{ pillar['openstack']['database_host'] }}"

@@ -42,15 +42,9 @@ keystone-setup:
     - template: jinja
     - watch:
       - pkg.installed: keystone
-    - defaults:
-        openstack_internal_address: {{ pillar['openstack']['openstack_internal_address'] }}
-        openstack_public_address: {{ pillar['openstack']['openstack_public_address'] }}
-        admin_password: {{ pillar['openstack']['admin_password'] }}
-        service_password: {{ pillar['openstack']['service_password']}}
-        service_token: {{ pillar['openstack']['admin_token'] }}
-        admin_token: {{ pillar['openstack']['admin_token'] }}
-        database_password: {{ pillar['openstack']['database_password'] }}
-        database_host: {{ pillar['openstack']['database_host'] }}
-        nova_node_availability_zone: {{ pillar['openstack']['nova_node_availability_zone'] }}
-
-
+    - context:
+        infra: {{ pillar['infra'] }}
+        networking: {{ pillar['networking'] }}
+        endpoints: {{ pillar['endpoints'] }}
+        keystone: {{ pillar['keystone'] }}
+        nova: {{ pillar['nova'] }}

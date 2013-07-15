@@ -1,1 +1,1 @@
-{{ pillar['openstack']['erlang_cookie'] }}
+{{ pillar['secrets']['rabbit']['erlang_cookie'] }}

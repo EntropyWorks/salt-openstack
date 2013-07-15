@@ -1,8 +1,3 @@
-#  galera_servers:
-#    ip_01: 10.8.52.17
-#    ip_02: 10.8.53.74
-#    ip_03: 10.8.54.18
-
 haproxy:
   pkg:
     - installed
@@ -28,3 +23,7 @@ haproxy:
     - recurse
     - source: salt://openstack/haproxy
     - template: jinja
+    - context:
+        infra: {{ pillar['infra'] }}
+        networking: {{ pillar['networking'] }}
+        endpoints: {{ pillar['endpoints'] }}
