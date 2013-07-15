@@ -5,12 +5,13 @@ ubuntu-cloud-keyring:
   pkg.installed
 
 # name: "deb http://ubuntu-cloud.archive.canonical.com/ubuntu precise-updates/grizzly main"
-private-openstack-repo:
+{% for mirror in pillar['infra']['mirror'].iteritems() }} %}
+{{ mirror_name }}:
   pkgrepo.managed:
-    - name: "{{ pillar['openstack']['cloud_mirror'] }}"
-    - human_name: private-openstack-repo
-    - file: /etc/apt/sources.list.d/openstack-ubuntu-archive.list
-    - keyid: 5EDB1B62EC4926EA
+    - name: "{{ pillar['infra']['mirror']['{{ mirror_name }}']['url'] }}"
+    - human_name: {{ pillar['infra']['mirror']['{{ mirror_name }}']['human_name'] }}
+    - file: {{ pillar['infra']['mirror']['{{ mirror_name }}']['file'] }}
+    - keyid: {{ pillar['infra']['mirror']['{{ mirror_name }}']['keyid'] }}
     - keyserver: keyserver.ubuntu.com
     - required:
       - pkg.installed: ubuntu-cloud-keyring
@@ -21,3 +22,4 @@ private-openstack-repo:
       - pkg.installed: cinder-pkgs
       - pkg.installed: dashboard-pkgs
       - pkg.installed: keystone-pkgs
+{% endfor %}
