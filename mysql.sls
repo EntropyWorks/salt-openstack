@@ -49,7 +49,7 @@ mysql:
 
 {{ user }}-grant-wildcard:
   cmd.run:
-    - name: mysql -e "GRANT ALL ON {{ user }}.* TO '{{ user }}'@'%' IDENTIFIED BY '{{ pillar['openstack']['database_password'] }}';"
+    - name: mysql -e "GRANT ALL ON {{ user }}.* TO '{{ user }}'@'%' IDENTIFIED BY '{{ pillar['secrets'][{{ user }}]['db_password'] }}';"
     - unless: mysql -e "select Host,User from user Where user='{{ user }}' AND  host='%';" | grep {{ user }}
     - require:
       - pkg: mysql-server
@@ -60,7 +60,7 @@ mysql:
 
 {{ user }}-grant-localhost:
   cmd.run:
-    - name: mysql -e "GRANT ALL ON {{ user }}.* TO '{{ user }}'@'localhost' IDENTIFIED BY '{{ pillar['openstack']['database_password'] }}';"
+    - name: mysql -e "GRANT ALL ON {{ user }}.* TO '{{ user }}'@'localhost' IDENTIFIED BY '{{ pillar['secrets'][{{ user }}]['db_password'] }}';"
     - unless: mysql -e "select Host,User from user Where user='{{ user }}' AND  host='localhost';" | grep {{ user }}
     - require:
       - pkg: mysql-server
@@ -70,7 +70,7 @@ mysql:
 
 {{ user }}-grant-star:
   cmd.run:
-    - name: mysql -e "GRANT ALL ON {{ user }}.* TO '{{ user }}'@'*' IDENTIFIED BY '{{ pillar['openstack']['database_password'] }}';"
+    - name: mysql -e "GRANT ALL ON {{ user }}.* TO '{{ user }}'@'*' IDENTIFIED BY '{{ pillar['secrets'][{{ user }}]['db_password'] }}';"
     - unless: mysql -e "select Host,User from user Where user='{{ user }}' AND  host='*';" | grep {{ user }}
     - require:
       - pkg: mysql-server

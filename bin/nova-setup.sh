@@ -21,15 +21,15 @@ if [ ! -f /etc/setup-done-nova ] ; then
 	echo " Creating private IP"
 	nova-manage network create --label private \
 	      --dns1 8.8.8.8 --dns2 8.8.4.4 \
-	      --fixed_range_v4 {{ pillar['openstack']['nova_network_private'] }} \
-	      --num_networks {{ pillar['openstack']['nova_network_private_num'] }} \
-	      --bridge_interface {{ pillar['openstack']['nova_network_bridge_interface'] }} \
-	      --network_size {{ pillar['openstack']['nova_network_private_size'] }} --multi_host=T
+	      --fixed_range_v4 {{ endpoints.nova.network_private }} \
+	      --num_networks {{ endpoints.nova.network_private_num }} \
+	      --bridge_interface {{ endpoints.nova.network_bridge_interface }} \
+	      --network_size {{ endpoints.nova.network_private_size }} --multi_host=T
 
 	echo " Creating floating IP"
-	nova-manage floating create {{  pillar['openstack']['nova_network_floating'] }} --pool="{{ nova_node_availability_zone }}"
+	nova-manage floating create {{  endpoints.nova.network_floating }} --pool="{{ endpoints.nova.availability_zone }}"
 
-{% for delete_network in pillar['openstack']['nova_delete_floating'] %}	
+{% for delete_network in pillar['endpoints']['nova]']['delete_floating'] %}	
 	echo " Removing {{ delete_network }}"
 	nova-manage floating delete {{ delete_network }}
 {% endfor %}
