@@ -10,7 +10,7 @@ export OS_REGION_NAME={{ endpoints.nova.availability_zone }}
 export COMPUTE_API_VERSION=1.1
 export OS_NO_CACHE=True
 
-export HOST_IP="{{ endpoints.nova.my_ip}}"
+export HOST_IP="{{ endpoints.nova.network.my_ip}}"
 export EXT_HOST_IP="{{ endpoints.openstack_public_address }}"
 export MYSQL_USER=keystone 
 export MYSQL_DATABASE=keystone
