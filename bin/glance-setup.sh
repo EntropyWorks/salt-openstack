@@ -1,7 +1,4 @@
 #!/bin/bash
-#export http_proxy=http://web-proxy.uswest.hpcloud.net:8080/
-#export https_proxy=http://web-proxy.uswest.hpcloud.net:8080/
-#export no_proxy=10.8.54.17,15.125.32.17,127.0.0.1,salt,apt-mirror
 
 if [ -f /root/scripts/stackrc ] ; then
 	source /root/scripts/stackrc
@@ -16,7 +13,7 @@ function install_image {
 
   if [ ! -f /root/images/$name.qcow2 ]; then
     mkdir -p /root/images/
-    curl --proxy http://web-proxy.uswest.hpcloud.net:8080/ -L -o /root/images/$name.qcow2 "$url"
+    curl -L -o /root/images/$name.qcow2 "$url"
   fi
 
   glance-manage db_sync
