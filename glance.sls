@@ -1,3 +1,19 @@
+# Copyright 2012-2013 Hewlett-Packard Development Company, L.P.
+# All Rights Reserved.
+# Copyright 2013 Yazz D. Atlas <yazz.atlas@hp.com>
+#
+#    Licensed under the Apache License, Version 2.0 (the "License"); you may
+#    not use this file except in compliance with the License. You may obtain
+#    a copy of the License at
+#
+#         http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+#    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+#    License for the specific language governing permissions and limitations
+#    under the License.
+#
 include:
   - openstack.mysql
   - openstack.root-scripts
@@ -52,33 +68,10 @@ glance-setup:
     - require:
       - pkg.installed: glance-pkgs
       - file.recurse: /root/scripts
-    - defaults:
-        openstack_internal_address: {{ pillar['openstack']['openstack_internal_address'] }}
-        openstack_admin_address: {{ pillar['openstack']['openstack_admin_address'] }}
-        openstack_public_address: {{ pillar['openstack']['openstack_public_address'] }}
-        admin_password: {{ pillar['openstack']['admin_password'] }}
-        service_password: {{ pillar['openstack']['service_password']}}
-        service_token: {{ pillar['openstack']['admin_token'] }}
-        database_password: {{ pillar['openstack']['database_password'] }}
-        keystone_host: {{ pillar['openstack']['keystone_host'] }}
-        keystone_auth_port: {{ pillar['openstack']['keystone_auth_port'] }}
-        keystone_auth_protocol: {{ pillar['openstack']['keystone_auth_protocol'] }}
-        glance_host: {{ pillar['openstack']['glance_host'] }}
-        nova_host: {{ pillar['openstack']['openstack_public_address'] }}
-        nova_network_private_interface: {{ pillar['openstack']['nova_network_private_interface'] }}
-        rabbit_host: {{ pillar['openstack']['rabbit_host'] }}
-        rabbit_password: {{ pillar['openstack']['rabbit_password'] }}
-        nova_network_public_interface: {{ pillar['openstack']['nova_network_public_interface'] }}
-        fixed_range: {{ pillar['openstack']['nova_network_private'] }}
-        my_ip: {{ pillar['openstack']['openstack_internal_address'] }}
-        nova_libvirt_type: {{ pillar['openstack']['nova_libvirt_type'] }}
-        nova_compute_driver: {{ pillar['openstack']['nova_compute_driver'] }}
-        nova_network_private: {{ pillar['openstack']['nova_network_private'] }}
-        quantum_host: {{ pillar['openstack']['openstack_internal_address'] }}
-        s3_host: {{ pillar['openstack']['openstack_internal_address'] }}
-        ec2_host: {{ pillar['openstack']['openstack_internal_address'] }}
-        ec2_dmz_host: {{ pillar['openstack']['openstack_internal_address'] }}
-        ec2_url: {{ pillar['openstack']['openstack_internal_address'] }}
-        cc_host: {{ pillar['openstack']['openstack_internal_address'] }}
-        database_host: {{ pillar['openstack']['database_host'] }}
-
+    - context:
+	secrets: {{ pillar['secrets'] }}
+        cinder: {{ pillar['cinder'] }}
+        glance: {{ pillar['glance'] }}
+        keystone: {{ pillar['keystone'] }}
+        nova: {{ pillar['nova'] }}
+        endpoints: {{ pillar['endpoints'] }}

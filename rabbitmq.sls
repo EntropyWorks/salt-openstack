@@ -1,3 +1,19 @@
+# Copyright 2012-2013 Hewlett-Packard Development Company, L.P.
+# All Rights Reserved.
+# Copyright 2013 Yazz D. Atlas <yazz.atlas@hp.com>
+#
+#    Licensed under the Apache License, Version 2.0 (the "License"); you may
+#    not use this file except in compliance with the License. You may obtain
+#    a copy of the License at
+#
+#         http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+#    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+#    License for the specific language governing permissions and limitations
+#    under the License.
+#
 rabbitmq-server:
   pkg.installed:
     - name: rabbitmq-server
@@ -15,10 +31,11 @@ rabbitmq-server:
     - source: salt://openstack/rabbitmq/config/ssl
     - template: jinja
     - clean: True
+    - template: jinja
     - require:
       - pkg: rabbitmq-server
 
-{% for server_hostname, server_ip in pillar['openstack']['rabbit_servers'].iteritems() %}
+{% for server_hostname, server_ip in pillar['endpoints']['rabbit']['servers'].iteritems() %}
 {% if server_hostname != grains['host'] %}
 host_add_{{ server_hostname }}:
   host.present:
@@ -84,8 +101,8 @@ start_rabbit_service:
       - cmd: sleep_before_start
       - file: /var/lib/rabbitmq/.erlang.cookie
 
-{% if pillar['openstack']['rabbit_master_node'] == grains['host'] %}
-{% for rabbit_username, rabbit_password in pillar['openstack']['rabbit_users'].iteritems() -%}
+{% if pillar['endpoints']['rabbit']['master_node']  == grains['host'] %}
+{% for rabbit_username, rabbit_password in pillar['secrets']['rabbit_users'].iteritems() -%}
 
 rabbit_user_{{ rabbit_username }}:
   rabbitmq_user.present:
@@ -130,7 +147,7 @@ rabbit_reset:
 
 join_rabbit_cluster:
   cmd.run:
-    - name: rabbitmqctl join_cluster rabbit@{{ pillar['openstack']['rabbit_master_node'] }}
+    - name: rabbitmqctl join_cluster rabbit@{{ pillar['endpoints']['rabbit']['master_node'] }}
     - user: root
     - require:
       - cmd: rabbit_reset

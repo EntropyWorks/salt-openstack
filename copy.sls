@@ -1,78 +1,83 @@
+# Copyright 2012-2013 Hewlett-Packard Development Company, L.P.
+# All Rights Reserved.
+# Copyright 2013 Yazz D. Atlas <yazz.atlas@hp.com>
+#
+#    Licensed under the Apache License, Version 2.0 (the "License"); you may
+#    not use this file except in compliance with the License. You may obtain
+#    a copy of the License at
+#
+#         http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+#    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+#    License for the specific language governing permissions and limitations
+#    under the License.
+#
 /root/scripts:
   file:
     - recurse
     - source: salt://openstack/scripts
     - file_mode: 755
     - template: jinja
-    - defaults:
-        openstack_internal_address: {{ pillar['openstack']['openstack_internal_address'] }}
-        openstack_public_address: {{ pillar['openstack']['openstack_public_address'] }}
-        admin_password: {{ pillar['openstack']['admin_password'] }} 
-        service_password: {{ pillar['openstack']['service_password']}} 
-        service_token: {{ pillar['openstack']['admin_token'] }}
-        database_password: {{ pillar['openstack']['database_password'] }}
-        database_host: {{ pillar['openstack']['database_host'] }}
+    - context:
+        infra: {{ pillar['infra'] }}
+        networking: {{ pillar['networking'] }}
+        endpoints: {{ pillar['endpoints'] }}
+        keystone: {{ pillar['keystone'] }}
+        nova: {{ pillar['nova'] }}
+        glance: {{ pillar['glance'] }}
+        cinder: {{ pillar['cinder'] }}
+        rabbit: {{ pillar['rabbit'] }}
+        swift: {{ pillar['swift'] }}
+        quantum: {{ pillar['quantum'] }}
 
 /etc/nova:
   file:
     - recurse
     - source: salt://openstack/nova
     - template: jinja
-    - defaults:
-        openstack_internal_address: {{ pillar['openstack']['openstack_internal_address'] }}
-        openstack_public_address: {{ pillar['openstack']['openstack_public_address'] }}
-        admin_password: {{ pillar['openstack']['admin_password'] }} 
-        service_password: {{ pillar['openstack']['service_password']}} 
-        service_token: {{ pillar['openstack']['admin_token'] }}
-        database_password: {{ pillar['openstack']['database_password'] }}
-        keystone_host: {{ pillar['openstack']['keystone_host'] }}
-        keystone_auth_port: {{ pillar['openstack']['keystone_auth_port'] }}
-        keystone_auth_protocol: {{ pillar['openstack']['keystone_auth_protocol'] }}
-        glance_host: {{ pillar['openstack']['glance_host'] }}
-        nova_host: {{ pillar['openstack']['openstack_public_address'] }}
-        nova_network_private_interface: {{ pillar['openstack']['nova_network_private_interface'] }}
-        rabbit_host: {{ pillar['openstack']['rabbit_host'] }}
-        rabbit_password: {{ pillar['openstack']['rabbit_password'] }}
-        nova_network_public_interface: {{ pillar['openstack']['nova_network_public_interface'] }}
-        fixed_range: {{ pillar['openstack']['nova_network_private'] }}
-        my_ip: {{ pillar['openstack']['openstack_internal_address'] }} # This needs to be changed
-        nova_libvirt_type: {{ pillar['openstack']['nova_libvirt_type'] }}
-        nova_compute_driver: {{ pillar['openstack']['nova_compute_driver'] }}
-        nova_network_private: {{ pillar['openstack']['nova_network_private'] }}
-        quantum_host: {{ pillar['openstack']['openstack_internal_address'] }}
-        s3_host: {{ pillar['openstack']['openstack_internal_address'] }}
-        ec2_host: {{ pillar['openstack']['openstack_internal_address'] }}
-        ec2_dmz_host: {{ pillar['openstack']['openstack_internal_address'] }}
-        ec2_url: {{ pillar['openstack']['openstack_internal_address'] }}
-        cc_host: {{ pillar['openstack']['openstack_internal_address'] }}
-        database_host: {{ pillar['openstack']['database_host'] }}
+    - context:
+        infra: {{ pillar['infra'] }}
+        networking: {{ pillar['networking'] }}
+        endpoints: {{ pillar['endpoints'] }}
+        keystone: {{ pillar['keystone'] }}
+        nova: {{ pillar['nova'] }}
+        glance: {{ pillar['glance'] }}
+        cinder: {{ pillar['cinder'] }}
+        rabbit: {{ pillar['rabbit'] }}
+        swift: {{ pillar['swift'] }}
+        quantum: {{ pillar['quantum'] }}
 
 /etc/keystone:
   file:
     - recurse
     - source: salt://openstack/keystone
     - template: jinja
-    - defaults:
-        openstack_internal_address: {{ pillar['openstack']['openstack_internal_address'] }}
-        openstack_public_address: {{ pillar['openstack']['openstack_public_address'] }}
-        admin_password: {{ pillar['openstack']['admin_password'] }} 
-        service_password: {{ pillar['openstack']['service_password']}} 
-        service_token: {{ pillar['openstack']['admin_token'] }}
-        admin_token: {{ pillar['openstack']['admin_token'] }}
-        database_password: {{ pillar['openstack']['database_password'] }}
-        database_host: {{ pillar['openstack']['database_host'] }}
+    - context:
+        infra: {{ pillar['infra'] }}
+        networking: {{ pillar['networking'] }}
+        endpoints: {{ pillar['endpoints'] }}
+        keystone: {{ pillar['keystone'] }}
+        nova: {{ pillar['nova'] }}
+        glance: {{ pillar['glance'] }}
+        cinder: {{ pillar['cinder'] }}
+        rabbit: {{ pillar['rabbit'] }}
+        swift: {{ pillar['swift'] }}
+        quantum: {{ pillar['quantum'] }}
 
 /etc/glance:
   file:
     - recurse
     - source: salt://openstack/glance
-    - defaults:
-        openstack_internal_address: {{ pillar['openstack']['openstack_internal_address'] }}
-        openstack_public_address: {{ pillar['openstack']['openstack_public_address'] }}
-        admin_password: {{ pillar['openstack']['admin_password'] }} 
-        service_password: {{ pillar['openstack']['service_password']}} 
-        service_token: {{ pillar['openstack']['admin_token'] }}
-        database_password: {{ pillar['openstack']['database_password'] }}
-        database_host: {{ pillar['openstack']['database_host'] }}
-
-
+    - context:
+        infra: {{ pillar['infra'] }}
+        networking: {{ pillar['networking'] }}
+        endpoints: {{ pillar['endpoints'] }}
+        keystone: {{ pillar['keystone'] }}
+        nova: {{ pillar['nova'] }}
+        glance: {{ pillar['glance'] }}
+        cinder: {{ pillar['cinder'] }}
+        rabbit: {{ pillar['rabbit'] }}
+        swift: {{ pillar['swift'] }}
+        quantum: {{ pillar['quantum'] }}

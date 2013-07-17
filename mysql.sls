@@ -1,3 +1,19 @@
+# Copyright 2012-2013 Hewlett-Packard Development Company, L.P.
+# All Rights Reserved.
+# Copyright 2013 Yazz D. Atlas <yazz.atlas@hp.com>
+#
+#    Licensed under the Apache License, Version 2.0 (the "License"); you may
+#    not use this file except in compliance with the License. You may obtain
+#    a copy of the License at
+#
+#         http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+#    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+#    License for the specific language governing permissions and limitations
+#    under the License.
+#
 mysql:
   pkg:
     - installed
@@ -23,7 +39,7 @@ mysql:
 {{ user }}:
   mysql_user.present:
     - host: "%"
-    - password: {{ pillar['openstack']['database_password'] }}
+    - password: {{ pillar['secrets'][{{ user }}]['db_password'] }}
     - require:
       - pkg: mysql-server
       - file.sed: /etc/mysql/my.cnf
@@ -49,7 +65,7 @@ mysql:
 
 {{ user }}-grant-wildcard:
   cmd.run:
-    - name: mysql -e "GRANT ALL ON {{ user }}.* TO '{{ user }}'@'%' IDENTIFIED BY '{{ pillar['openstack']['database_password'] }}';"
+    - name: mysql -e "GRANT ALL ON {{ user }}.* TO '{{ user }}'@'%' IDENTIFIED BY '{{ pillar['secrets'][{{ user }}]['db_password'] }}';"
     - unless: mysql -e "select Host,User from user Where user='{{ user }}' AND  host='%';" | grep {{ user }}
     - require:
       - pkg: mysql-server
@@ -60,7 +76,7 @@ mysql:
 
 {{ user }}-grant-localhost:
   cmd.run:
-    - name: mysql -e "GRANT ALL ON {{ user }}.* TO '{{ user }}'@'localhost' IDENTIFIED BY '{{ pillar['openstack']['database_password'] }}';"
+    - name: mysql -e "GRANT ALL ON {{ user }}.* TO '{{ user }}'@'localhost' IDENTIFIED BY '{{ pillar['secrets'][{{ user }}]['db_password'] }}';"
     - unless: mysql -e "select Host,User from user Where user='{{ user }}' AND  host='localhost';" | grep {{ user }}
     - require:
       - pkg: mysql-server
@@ -70,7 +86,7 @@ mysql:
 
 {{ user }}-grant-star:
   cmd.run:
-    - name: mysql -e "GRANT ALL ON {{ user }}.* TO '{{ user }}'@'*' IDENTIFIED BY '{{ pillar['openstack']['database_password'] }}';"
+    - name: mysql -e "GRANT ALL ON {{ user }}.* TO '{{ user }}'@'*' IDENTIFIED BY '{{ pillar['secrets'][{{ user }}]['db_password'] }}';"
     - unless: mysql -e "select Host,User from user Where user='{{ user }}' AND  host='*';" | grep {{ user }}
     - require:
       - pkg: mysql-server

@@ -1,4 +1,4 @@
-# Ip address added  by salt for nova resize to work {% for ip_address  in pillar['openstack']['nova_ssh_no_host_check'] %}
+# Ip address added  by salt for nova resize to work {% for ip_address  in pillar['secrets']['nova']['ssh_no_host_check'] %}
 Host {{ ip_address }}
   UserKnownHostsFile /dev/null
   StrictHostKeyChecking no

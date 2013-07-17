@@ -1,3 +1,19 @@
+# Copyright 2012-2013 Hewlett-Packard Development Company, L.P.
+# All Rights Reserved.
+# Copyright 2013 Yazz D. Atlas <yazz.atlas@hp.com>
+#
+#    Licensed under the Apache License, Version 2.0 (the "License"); you may
+#    not use this file except in compliance with the License. You may obtain
+#    a copy of the License at
+#
+#         http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+#    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+#    License for the specific language governing permissions and limitations
+#    under the License.
+#
 include:
   - openstack.mysql
   - openstack.root-scripts
@@ -42,15 +58,10 @@ keystone-setup:
     - template: jinja
     - watch:
       - pkg.installed: keystone
-    - defaults:
-        openstack_internal_address: {{ pillar['openstack']['openstack_internal_address'] }}
-        openstack_public_address: {{ pillar['openstack']['openstack_public_address'] }}
-        admin_password: {{ pillar['openstack']['admin_password'] }}
-        service_password: {{ pillar['openstack']['service_password']}}
-        service_token: {{ pillar['openstack']['admin_token'] }}
-        admin_token: {{ pillar['openstack']['admin_token'] }}
-        database_password: {{ pillar['openstack']['database_password'] }}
-        database_host: {{ pillar['openstack']['database_host'] }}
-        nova_node_availability_zone: {{ pillar['openstack']['nova_node_availability_zone'] }}
-
-
+    - context:
+        secrets: {{ pillar['secrets'] }}
+        infra: {{ pillar['infra'] }}
+        networking: {{ pillar['networking'] }}
+        endpoints: {{ pillar['endpoints'] }}
+        keystone: {{ pillar['keystone'] }}
+        nova: {{ pillar['nova'] }}
