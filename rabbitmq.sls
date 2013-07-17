@@ -17,7 +17,7 @@ rabbitmq-server:
     - require:
       - pkg: rabbitmq-server
 
-{% for server_hostname, server_ip in {{ rabbit.servers }}.iteritems() %}
+{% for server_hostname, server_ip in pillar['endpoints']['rabbit']['servers'].iteritems() %}
 {% if server_hostname != grains['host'] %}
 host_add_{{ server_hostname }}:
   host.present:
@@ -83,7 +83,7 @@ start_rabbit_service:
       - cmd: sleep_before_start
       - file: /var/lib/rabbitmq/.erlang.cookie
 
-{% if {{ rabbit.master_node }} == grains['host'] %}
+{% if pillar['endpoints']['rabbit']['master_node']  == grains['host'] %}
 {% for rabbit_username, rabbit_password in pillar['secrets']['rabbit_users'].iteritems() -%}
 
 rabbit_user_{{ rabbit_username }}:
@@ -129,7 +129,7 @@ rabbit_reset:
 
 join_rabbit_cluster:
   cmd.run:
-    - name: rabbitmqctl join_cluster rabbit@{{ rabbit.master_node }}
+    - name: rabbitmqctl join_cluster rabbit@{{ pillar['endpoints']['rabbit']['master_node'] }}
     - user: root
     - require:
       - cmd: rabbit_reset

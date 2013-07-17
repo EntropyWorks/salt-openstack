@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 export NOVA_VERSION=1.1
 export OS_PASSWORD={{ secrets.admin_password }}
 export OS_AUTH_URL={{ keystone.auth_protocol }}://{{ endpoints.openstack_public_address }}:5000/v2.0
@@ -12,10 +11,10 @@ export OS_NO_CACHE=True
 
 export HOST_IP="{{ endpoints.nova.network.my_ip}}"
 export EXT_HOST_IP="{{ endpoints.openstack_public_address }}"
-export MYSQL_USER=keystone 
+export MYSQL_USER=keystone
 export MYSQL_DATABASE=keystone
 export MYSQL_HOST="{{ endpoints.hosts.database }}"
-export MYSQL_PASSWORD="{{ secrets.db_password.keystone'] }}"
+export MYSQL_PASSWORD="{{ secrets.keystone.db_password }}"
 export KEYSTONE_REGION="${KEYSTONE_REGION:-RegionOne}"
 export KEYSTONE_AUTH_PORT="{{ keystone.auth_port }}"
 export KEYSTONE_AUTH_PROTOCOL="{{ keystone.auth_protocol }}"
@@ -27,8 +26,7 @@ export NOVA_EC2_PORT="{{ nova.ec2_port }}"
 export GLANCE_PROTOCOL="{{ glance.protocol }}"
 export GLANCE_PORT="{{ glance.port }}"
 export CINDER_PROTOCOL="{{ cinder.protocol }}"
-export CINDER_PORT="{{ openstack.cinder_port }}"
-
+export CINDER_PORT="{{ cinder.port }}"
 
 export CONTROLLER_PUBLIC_ADDRESS="{{ endpoints.openstack_public_address }}"
 export CONTROLLER_ADMIN_ADDRESS="{{ endpoints.openstack_admin_address }}"
