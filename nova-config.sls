@@ -9,6 +9,7 @@ include:
     - required:
       - pkg.installed: nova-pkgs
     - context:
+        secrets: {{ pillar['secrets'] }}
         infra: {{ pillar['infra'] }}
         networking: {{ pillar['networking'] }}
         endpoints: {{ pillar['endpoints'] }}

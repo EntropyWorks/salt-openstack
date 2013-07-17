@@ -53,6 +53,7 @@ glance-setup:
       - pkg.installed: glance-pkgs
       - file.recurse: /root/scripts
     - context:
+	secrets: {{ pillar['secrets'] }}
         cinder: {{ pillar['cinder'] }}
         glance: {{ pillar['glance'] }}
         keystone: {{ pillar['keystone'] }}

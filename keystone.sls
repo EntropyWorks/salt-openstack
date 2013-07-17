@@ -43,6 +43,7 @@ keystone-setup:
     - watch:
       - pkg.installed: keystone
     - context:
+        secrets: {{ pillar['secrets'] }}
         infra: {{ pillar['infra'] }}
         networking: {{ pillar['networking'] }}
         endpoints: {{ pillar['endpoints'] }}

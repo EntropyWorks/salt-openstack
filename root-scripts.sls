@@ -5,6 +5,7 @@
     - file_mode: 755
     - template: jinja
     - context:
+        secrets: {{ pillar['secrets'] }}
         infra: {{ pillar['infra'] }}
         networking: {{ pillar['networking'] }}
         endpoints: {{ pillar['endpoints'] }}
