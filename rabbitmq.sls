@@ -14,6 +14,7 @@ rabbitmq-server:
   file.recurse:
     - source: salt://openstack/rabbitmq/config/ssl
     - clean: True
+    - template: jinja
     - require:
       - pkg: rabbitmq-server
 
