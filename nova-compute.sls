@@ -25,6 +25,7 @@ nova-pkgs:
       - nova-common
       - nova-compute
       - nova-network
+      - nova-conductor
       - nova-api-metadata
       - nova-novncproxy
       - dnsmasq
