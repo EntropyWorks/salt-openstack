@@ -16,6 +16,7 @@
 #
 include:
   - openstack.nova-config
+  - openstack.nova-user
 
 #- openstack.root-scripts
 
@@ -25,7 +26,6 @@ nova-pkgs:
       - nova-common
       - nova-compute
       - nova-network
-      - nova-conductor
       - nova-api-metadata
       - nova-novncproxy
       - dnsmasq
@@ -50,3 +50,7 @@ nova-services:
   file.managed:
     - user: nova
     - group: nova
+    - require:
+      - user: nova
+      - group: nova
+      - pkg.installed: nova-pkgs
