@@ -7,12 +7,12 @@ cd /etc/init.d/; for i in $( ls keystone ); do sudo service $i stop; done
 cd /etc/init.d/; for i in $( ls cinder-* ); do sudo service $i stop; done
 cd /etc/init.d/; for i in $( ls glance-* ); do sudo service $i stop; done
 
-service rabbitmq-server stop
+#service rabbitmq-server stop
 
 ifconfig br100 down
 brctl delbr br100
 
-apt-get remove -y --purge rabbitmq-server
+#apt-get remove -y --purge rabbitmq-server
 
 apt-get remove -y --purge nova-api nova-cert nova-common \
   nova-console nova-consoleauth nova-network nova-scheduler \
@@ -53,6 +53,7 @@ apt-get remove -y --purge cinder-api cinder-common cinder-scheduler \
 rm -rf /etc/cinder
 rm -rf /var/lib/cinder
 
+skipped(){
 mysql mysql --execute='select Host,User,Select_priv,Insert_priv,Update_priv,Delete_priv,Create_priv,Drop_priv,Grant_priv from user;'
 for i in nova keystone cinder glance quantum ; do
         mysqladmin -f drop ${i} &> /dev/null
@@ -65,6 +66,7 @@ done
 
 mysql mysql --execute='select Host,User,Select_priv,Insert_priv,Update_priv,Delete_priv,Create_priv,Drop_priv,Grant_priv from user;'
 mysqladmin flush-hosts
+}
 
 apt-get -y autoremove
 

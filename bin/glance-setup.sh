@@ -13,7 +13,10 @@ function install_image {
 
   if [ ! -f /root/images/$name.qcow2 ]; then
     mkdir -p /root/images/
+    http_proxy="http://{{ infra.proxy.host }}:{{ infra.proxy.port }}/"
+    https_proxy="http://{{ infra.proxy.host }}:{{ infra.proxy.port }}/"
     curl -L -o /root/images/$name.qcow2 "$url"
+    unset http_proxy https_proxy
   fi
 
   glance-manage db_sync

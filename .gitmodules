@@ -1,0 +1,3 @@
+[submodule "nova-network-drivers"]
+	path = nova-network-drivers
+	url = https://github.com/hpcloud/nova-network-drivers.git
