@@ -13,7 +13,11 @@ if [ ! -f /etc/setup-done-nova ] ; then
         rm -rf  /var/log/nova/*.log
         cd /etc/init.d/; for i in $( ls nova-* ); do sudo service $i stop; done
         cd /etc/init.d/; for i in $( ls nova-* ); do sudo service $i start; done
-        mysqladmin flush-hosts
+
+	if [ -f /usr/bin/mysqladmin ] ; then
+		mysqladmin flush-hosts
+	fi
+
 	nova-manage --debug --verbose --config-dir /etc/nova db sync
 
 	sysctl net.ipv4.ip_forward=1 
