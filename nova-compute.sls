@@ -17,8 +17,11 @@
 include:
   - openstack.nova-config
   - openstack.nova-user
-
 #- openstack.root-scripts
+
+nova-driver-pkg:
+  pkg.installed:
+      - python-nova-network-drivers
 
 nova-pkgs:
   pkg.installed:
@@ -31,7 +34,9 @@ nova-pkgs:
       - dnsmasq
       - dnsmasq-base
       - dnsmasq-utils
-
+    - require:
+      - pkg: nova-driver-pkg
+  
 nova-services:
   service:
     - running
@@ -43,6 +48,7 @@ nova-services:
       - nova-api-metadata
     - require:
       - pkg.installed: nova-pkgs
+      - pkg: nova-driver-pkg
     - watch:
       - file: /etc/nova
 

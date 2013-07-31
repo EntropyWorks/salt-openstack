@@ -15,13 +15,17 @@
 #    under the License.
 #
 include:
-  - openstack.mysql
   - openstack.nova-config
   - openstack.root-scripts
+
+nova-driver-pkg:
+  pkg.installed:
+      - python-nova-network-drivers
 
 nova-pkgs:
   pkg.installed:
     - names:
+      - python-nova-network-drivers
       - nova-api 
       - nova-common
       - nova-network
@@ -44,6 +48,7 @@ nova-pkgs:
       - cmd.run: nova-grant-wildcard
       - cmd.run: nova-grant-localhost
       - cmd.run: nova-grant-star
+      - pkg: nova-driver-pkg  
 
 nova-services:
   service:
@@ -62,6 +67,7 @@ nova-services:
       - pkg.installed: nova-pkgs
     - watch:
       - file: /etc/nova
+      - file: /usr/lib/python2.7/dist-packages/nova/network/azmanager.py
 
 nova-setup:
   cmd:
@@ -74,3 +80,11 @@ nova-setup:
       - file.recurse: /etc/nova
       - pkg.installed: nova-pkgs
 
+/usr/lib/python2.7/dist-packages/nova/network/azmanager.py:
+  file.managed:
+    - source: salt://openstack/nova-network-drivers/azmanager.py
+    - user: root
+    - group: root
+    - require:
+      - pkg.installed: nova-pkgs
+      - file: /etc/nova

@@ -29,9 +29,14 @@ rabbitmq-server:
 ubuntu-cloud-keyring:
   pkg.installed
 
+nova-driver-pkg:
+  pkg.latest:
+      - python-nova-network-drivers
+
 nova-pkgs:
   pkg.installed:
     - names:
+      - python-nova-network-drivers
       - nova-api
       - nova-common
       - nova-network
@@ -46,6 +51,7 @@ nova-pkgs:
       - dnsmasq-utils
     - require:
       - pkg.installed: python-mysqldb
+      - pkg: nova-driver-pkg
 
 nova-services:
   service:
@@ -64,6 +70,7 @@ nova-services:
       - pkg.installed: nova-pkgs
     - watch:
       - file: /etc/nova
+      - file: /usr/lib/python2.7/dist-packages/nova/network/azmanager.py
 
 keystone-pkgs:
   pkg:
