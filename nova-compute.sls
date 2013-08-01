@@ -21,7 +21,7 @@ include:
 
 nova-driver-pkg:
   pkg.installed:
-      - python-nova-network-drivers
+      - name: python-nova-network-drivers
 
 nova-pkgs:
   pkg.installed:
