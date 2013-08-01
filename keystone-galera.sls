@@ -22,10 +22,6 @@ keystone-pkgs:
   pkg:
     - name: keystone
     - installed
-    - require:
-      - cmd.run: keystone-grant-wildcard
-      - cmd.run: keystone-grant-localhost
-      - cmd.run: keystone-grant-star
   service:
     - name: keystone
     - running
@@ -39,7 +35,6 @@ keystone-setup:
     - unless: test -f /etc/setup-done-keystone
     - name: /root/scripts/keystone-setup.sh
     - require:
-      - service.running: mysql
       - pkg.installed: keystone
       - file.recurse: /etc/keystone
       - file.recurse: /root/scripts
