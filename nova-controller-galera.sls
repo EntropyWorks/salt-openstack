@@ -257,6 +257,15 @@ haproxy:
     - require:
       - pkg.installed: haproxy
 
+/var/lib/haproxy:
+  file.directory:
+    - user: haproxy
+    - group: haproxy
+    - mode: 755
+    - makedirs: True
+    - require:
+      - pkg.installed: haproxy
+
 /etc/haproxy:
   file:
     - recurse
@@ -266,3 +275,5 @@ haproxy:
         infra: {{ pillar['infra'] }}
         networking: {{ pillar['networking'] }}
         endpoints: {{ pillar['endpoints'] }}
+    - require:
+      - file.directory: /var/lib/haproxy
