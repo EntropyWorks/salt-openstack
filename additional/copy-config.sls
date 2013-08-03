@@ -14,6 +14,10 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 #
+#------------------------
+# Sometimes I just want to copy over new configs and not have 
+# salt restart things.
+#------------------------
 /root/scripts:
   file:
     - recurse
