@@ -15,14 +15,28 @@
 #    under the License.
 #
 include:
-  - openstack.nova-config
   - openstack.nova-user
-#- openstack.root-scripts
+  - openstack.nova-config
+  - openstack.root-scripts
+  - openstack.haproxy
 
+python-eventlet:
+  pkg.installed
+
+python-mysqldb:
+  pkg.installed
+
+ubuntu-cloud-keyring:
+  pkg.installed
+
+# Custom driver for working with nova-network across multiple
+# AZ's in Gizzly. The nova config option fixed_range= doesn't work
+# anymore.
 nova-driver-pkg:
   pkg.installed:
       - name: python-nova-network-drivers
 
+# Install the packages for a nova node for running VM's
 nova-pkgs:
   pkg.installed:
     - names:
@@ -52,6 +66,9 @@ nova-services:
     - watch:
       - file: /etc/nova
 
+
+# We were having some issues after rebooting the nodes. The VM were not 
+# starting. This appears to have fixed that issue
 /var/lib/nova/instances/_base/ephemeral:
   file.managed:
     - user: nova
