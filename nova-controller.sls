@@ -14,9 +14,34 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 #
+#---------------------------
+# Currently this setup is for simple 1 AZ deploy with one DB.
+# The mysql parts should be removed if you already have a running
+# DB on a different host than the controller.
+#---------------------------
 include:
+  - openstack.mysql  
+  - openstack.keystone
+  - openstack.glance
+  - openstack.cinder
+  - openstack.dashboard
   - openstack.nova-config
   - openstack.root-scripts
+
+debconf-utils:
+  pkg.installed
+
+python-eventlet:
+  pkg.installed
+
+python-mysqldb:
+  pkg.installed
+
+rabbitmq-server:
+ pkg.installed
+
+ubuntu-cloud-keyring:
+  pkg.installed
 
 nova-driver-pkg:
   pkg.installed:
@@ -67,7 +92,6 @@ nova-services:
       - pkg.installed: nova-pkgs
     - watch:
       - file: /etc/nova
-      - file: /usr/lib/python2.7/dist-packages/nova/network/azmanager.py
 
 nova-setup:
   cmd:
@@ -80,11 +104,3 @@ nova-setup:
       - file.recurse: /etc/nova
       - pkg.installed: nova-pkgs
 
-/usr/lib/python2.7/dist-packages/nova/network/azmanager.py:
-  file.managed:
-    - source: salt://openstack/nova-network-drivers/azmanager.py
-    - user: root
-    - group: root
-    - require:
-      - pkg.installed: nova-pkgs
-      - file: /etc/nova
