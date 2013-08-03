@@ -200,7 +200,7 @@ cinder-services:
 /root/scripts:
   file:
     - recurse
-    - source: salt://openstack/bin
+    - source: salt://openstack/scripts
     - file_mode: 755
     - template: jinja
     - context:
