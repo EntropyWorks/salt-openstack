@@ -19,6 +19,7 @@ include:
   - openstack.nova-config
   - openstack.root-scripts
   - openstack.haproxy
+  - openstack.libvirt
 
 python-eventlet:
   pkg.installed
