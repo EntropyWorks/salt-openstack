@@ -3,13 +3,12 @@ export OS_PASSWORD={{ secrets.admin_password }}
 export OS_AUTH_URL={{ keystone.auth_protocol }}://{{ endpoints.openstack_public_address }}:5000/v2.0
 export OS_USERNAME=admin
 export OS_TENANT_NAME=admin
-export OS_REGION_NAME={{ endpoints.nova.availability_zone }}
 export COMPUTE_API_VERSION=1.1
 export OS_NO_CACHE=True
 
 #export HOST_IP="{{ endpoints.nova.network.my_ip}}"
 #export EXT_HOST_IP="{{ endpoints.openstack_public_address }}"
-#export MYSQL_USER=keystone 
+#export MYSQL_USER=keystone
 #export MYSQL_DATABASE=keystone
 #export MYSQL_HOST="{{ endpoints.hosts.database }}"
 #export MYSQL_PASSWORD="{{ secrets.keystone.db_password }}"
