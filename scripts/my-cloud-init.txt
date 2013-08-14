@@ -1,13 +1,26 @@
 #cloud-config
 
+bootcmd:
+ - echo 10.9.64.6 salt >> /etc/hosts
+
+apt_sources:
+  - source: "ppa:saltstack/salt"
+
+salt_minion:
+  conf:
+    master: 10.9.64.6
+
+ssh_import_id: [entropyworks]
+
 packages:
  - tiobench
  - sysstat
  - fstat
  - dstat
+ - salt-minion
 
 runcmd:
- - [ tiobench, "--size", "8000" , "--numruns", "10", "-block", "4096", "--block", "8192" ]
+ - [ tiobench, "--size", 8000, "--numruns", 10, "--block", 4096, "--block", 8192 ]
 
 final_message: "The system is finally up, after $UPTIME seconds"
 
@@ -17,6 +30,5 @@ output:
  final:
    output: "| tee /tmp/final.stdout | tee /tmp/bar.stdout"
    error: "&1"
-
 def_log_file: /var/log/my-logging-file.log
 syslog_fix_perms: syslog:root
