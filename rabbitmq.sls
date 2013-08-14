@@ -60,12 +60,21 @@ host_remove_{{ server_hostname }}:
 
 {% endfor %}
 
+enable_mgmt_plugin:
+  cmd.run:
+    - name: rabbitmq-plugins enable rabbitmq_management
+    - user: root
+    - require:
+      - pkg: rabbitmq-server
+
+
 sleep_before_stop:
   cmd.run:
     - name: sleep 30
     - user: root
     - require:
       - pkg: rabbitmq-server
+      - cmd: enable_mgmt_plugin
 
 stop_rabbitmq_service:
   cmd.run:
@@ -165,3 +174,14 @@ start_rabbit_app:
 
 {% endif %}
 
+enable_query_replication:
+  cmd.run:
+    - name: rabbitmqctl set_policy ha-all '.*' '{"ha-mode":"all", "ha-sync-mode":"automatic"}'
+    - user: root
+    - require:
+      - pkg: rabbitmq-server
+{% if pillar['rabbit_cluster_master'] == grains['host'] %}
+      - cmd: start_rabbit_service
+{% else %}
+      - cmd: start_rabbit_app
+{% endif %}
