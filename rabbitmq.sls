@@ -180,7 +180,7 @@ enable_query_replication:
     - user: root
     - require:
       - pkg: rabbitmq-server
-{% if pillar['rabbit_cluster_master'] == grains['host'] %}
+{% if pillar['endpoints']['rabbit']['master_node'] == grains['host'] %}
       - cmd: start_rabbit_service
 {% else %}
       - cmd: start_rabbit_app
