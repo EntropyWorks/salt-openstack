@@ -20,11 +20,12 @@
 # DB on a different host than the controller.
 #---------------------------
 include:
-  - openstack.mysql  
+  - openstack.mysql
   - openstack.keystone
   - openstack.glance
   - openstack.cinder
   - openstack.dashboard
+  - openstack.memcached
   - openstack.nova-config
   - openstack.root-scripts
 
@@ -51,16 +52,16 @@ nova-pkgs:
   pkg.installed:
     - names:
       - python-nova-network-drivers
-      - nova-api 
+      - nova-api
       - nova-common
       - nova-cert
-      - nova-consoleauth 
-      - nova-scheduler 
+      - nova-consoleauth
+      - nova-scheduler
       - nova-novncproxy
       - nova-conductor
       - dnsmasq
       - dnsmasq-base
-      - dnsmasq-utils  
+      - dnsmasq-utils
     - require:
       - service.running: mysql
       - pkg.installed: python-mysqldb
@@ -71,7 +72,7 @@ nova-pkgs:
       - cmd.run: nova-grant-wildcard
       - cmd.run: nova-grant-localhost
       - cmd.run: nova-grant-star
-      - pkg: nova-driver-pkg  
+      - pkg: nova-driver-pkg
 
 nova-services:
   service:
@@ -100,4 +101,3 @@ nova-setup:
       - file.recurse: /root/scripts
       - file.recurse: /etc/nova
       - pkg.installed: nova-pkgs
-
