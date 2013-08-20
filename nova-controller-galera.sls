@@ -14,6 +14,9 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 #
+include:
+  - openstack.memcached
+
 debconf-utils:
   pkg.installed
 
@@ -155,7 +158,7 @@ cinder-pkgs:
       - cinder-common
       - cinder-scheduler
       - cinder-volume
-      - open-iscsi 
+      - open-iscsi
       - iscsitarget
       - iscsitarget-dkms
     - require:
@@ -212,7 +215,7 @@ cinder-services:
         secrets: {{ pillar['secrets'] }}
         swift: {{ pillar['swift'] }}
         quantum: {{ pillar['quantum'] }}
-    
+
 /etc/nova:
   file:
     - recurse
