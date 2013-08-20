@@ -21,7 +21,7 @@ memcached:
         - name: /etc/memcached.conf
         - source: salt://openstack/memcached/memcached.conf
     service.running:
-        - enabled: true
+        - enable: true
         - restart: True
         - watch:
             - file: /etc/memcached.conf

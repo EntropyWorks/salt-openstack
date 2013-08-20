@@ -16,6 +16,7 @@
 #
 include:
   - openstack.mysql
+  - openstack.memcached
   - openstack.root-scripts
 
 glance-pkgs:
@@ -59,7 +60,7 @@ glance-setup:
       - file.recurse: /etc/glance
       - service.running: mysql
       - pkg.installed: glance-pkgs
-    
+
 /etc/glance:
   file:
     - recurse
@@ -69,7 +70,7 @@ glance-setup:
       - pkg.installed: glance-pkgs
       - file.recurse: /root/scripts
     - context:
-	secrets: {{ pillar['secrets'] }}
+        secrets: {{ pillar['secrets'] }}
         cinder: {{ pillar['cinder'] }}
         glance: {{ pillar['glance'] }}
         keystone: {{ pillar['keystone'] }}

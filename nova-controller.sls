@@ -25,7 +25,6 @@ include:
   - openstack.glance
   - openstack.cinder
   - openstack.dashboard
-  - openstack.memcached
   - openstack.nova-config
   - openstack.root-scripts
 

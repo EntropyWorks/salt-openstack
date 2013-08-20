@@ -17,6 +17,7 @@
 include:
   - openstack.mysql
   - openstack.root-scripts
+  - openstack.memcached
 
 keystone-pkgs:
   pkg:

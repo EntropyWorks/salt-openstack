@@ -16,6 +16,7 @@
 #
 include:
   - openstack.root-scripts
+  - openstack.memcached
 
 cinder-pkgs:
   pkg.installed:
@@ -24,7 +25,7 @@ cinder-pkgs:
       - cinder-common
       - cinder-scheduler
       - cinder-volume
-      - open-iscsi 
+      - open-iscsi
       - iscsitarget
       - iscsitarget-dkms
     - require:
