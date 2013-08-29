@@ -32,14 +32,24 @@ rabbitmq-server:
 ubuntu-cloud-keyring:
   pkg.installed
 
+# Custom driver for working with nova-network across multiple
+# AZ's in Gizzly. The nova config option fixed_range= doesn't work
+# anymore.
 nova-driver-pkg:
   pkg.installed:
       - name: python-nova-network-drivers
+
+# Custom filter for the nova scheduler to be able to filter based
+# on host AZs.
+nova-filter-pkg:
+  pkg.installed:
+      - name: python-nova-scheduler-filters
 
 nova-pkgs:
   pkg.installed:
     - names:
       - python-nova-network-drivers
+      - python-nova-scheduler-filters
       - nova-api
       - nova-common
       - nova-cert
@@ -53,6 +63,7 @@ nova-pkgs:
     - require:
       - pkg.installed: python-mysqldb
       - pkg.installed: nova-driver-pkg
+      - pkg.installed: nova-filter-pkg
 
 nova-services:
   service:
