@@ -51,7 +51,7 @@ nova-pkgs:
       - dnsmasq-utils
     - require:
       - pkg: nova-driver-pkg
-  
+
 nova-services:
   service:
     - running
@@ -68,8 +68,8 @@ nova-services:
       - file: /etc/nova
 
 
-# We were having some issues after rebooting the nodes. The VM were not 
-# starting. This appears to have fixed that issue
+# We were having some issues after rebooting the nodes. The VMs were not
+# starting. This appears to have fixed that issue.
 /var/lib/nova/instances/_base/ephemeral:
   file.managed:
     - user: nova
