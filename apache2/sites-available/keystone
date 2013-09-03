@@ -1,0 +1,55 @@
+SSLRandomSeed startup file:/dev/urandom 1024
+SSLRandomSeed connect file:/dev/urandom 1024
+SSLSessionCache shm:/usr/local/apache2/logs/ssl_cache_shm
+SSLSessionCacheTimeout 600
+WSGISocketPrefix /var/run/apache2
+
+NameVirtualHost *:5000
+Listen 5000
+<VirtualHost *:5000>
+    WSGIScriptAlias /  /var/www/cgi-bin/keystone/main
+    SSLEngine on
+    SSLOptions +StrictRequire
+    <Location "/">
+        SSLRequireSSL
+        Authtype none
+    </Location>
+    SSLProtocol -all +TLSv1 +SSLv3
+    SSLCipherSuite HIGH:MEDIUM:!aNULL:+SHA1:+MD5:+HIGH:+MEDIUM
+    SSLCertificateFile  {{ keystone.certfile }}
+    SSLCertificateKeyFile  {{ keystone.keyfile }}
+    SSLVerifyClient none
+    SSLProxyEngine off
+    <IfModule mime.c>
+        AddType application/x-x509-ca-cert      .crt
+        AddType application/x-pkcs7-crl         .crl
+    </IfModule>
+    ErrorLog /var/log/apache2/keystone_error.log
+    LogLevel warn
+    CustomLog /var/log/apache2/keystone_access.log combined
+</VirtualHost>
+
+NameVirtualHost *:35357
+Listen 35357
+<VirtualHost *:35357>
+    WSGIScriptAlias /  /var/www/cgi-bin/keystone/admin
+    SSLEngine on
+    SSLOptions +StrictRequire
+    <Location "/">
+        SSLRequireSSL
+        Authtype none
+    </Location>
+    SSLProtocol -all +TLSv1 +SSLv3
+    SSLCipherSuite HIGH:MEDIUM:!aNULL:+SHA1:+MD5:+HIGH:+MEDIUM
+    SSLCertificateFile {{ keystone.certfile }}
+    SSLCertificateKeyFile {{ keystone.keyfile }}
+    SSLVerifyClient none
+    SSLProxyEngine off
+    <IfModule mime.c>
+        AddType application/x-x509-ca-cert      .crt
+        AddType application/x-pkcs7-crl         .crl
+    </IfModule>
+    ErrorLog /var/log/apache2/keystone_admin_error.log
+    LogLevel warn
+    CustomLog /var/log/apache2/keystone_admin_access.log combined
+</VirtualHost>

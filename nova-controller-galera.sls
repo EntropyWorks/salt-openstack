@@ -16,6 +16,8 @@
 #
 include:
   - openstack.memcached
+  - openstack.apache2
+  - openstack.keystone
 
 debconf-utils:
   pkg.installed
@@ -81,39 +83,6 @@ nova-services:
       - pkg.installed: nova-pkgs
     - watch:
       - file: /etc/nova
-
-keystone-pkgs:
-  pkg:
-    - name: keystone
-    - installed
-  service:
-    - name: keystone
-    - running
-    - enable: True
-    - restart: True
-    - watch:
-      - file: /etc/keystone
-
-/etc/keystone:
-  file:
-    - recurse
-    - source: salt://openstack/keystone
-    - template: jinja
-    - watch:
-      - pkg.installed: keystone
-    - context:
-        infra: {{ pillar['infra'] }}
-        secrets: {{ pillar['secrets'] }}
-        networking: {{ pillar['networking'] }}
-        endpoints: {{ pillar['endpoints'] }}
-        keystone: {{ pillar['keystone'] }}
-        nova: {{ pillar['nova'] }}
-        glance: {{ pillar['glance'] }}
-        cinder: {{ pillar['cinder'] }}
-        rabbit: {{ pillar['rabbit'] }}
-        swift: {{ pillar['swift'] }}
-        quantum: {{ pillar['quantum'] }}
-
 
 glance-pkgs:
   pkg.installed:

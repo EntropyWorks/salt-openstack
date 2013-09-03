@@ -1,6 +1,6 @@
 # Copyright 2012-2013 Hewlett-Packard Development Company, L.P.
 # All Rights Reserved.
-# Copyright 2013 Yazz D. Atlas <yazz.atlas@hp.com>
+# Copyright 2013 Nikhil Manchanda <nikhil.manchanda@hp.com>
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
 #    not use this file except in compliance with the License. You may obtain
@@ -14,43 +14,52 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 #
-include:
-  - openstack.mysql
-  - openstack.root-scripts
-  - openstack.memcached
 
 keystone-pkgs:
-  pkg:
-    - name: keystone
-    - installed
+  pkg.installed:
+    - names:
+      - keystone
     - require:
-      - service.running: mysql
-      - mysql_database.present: keystone
-      - mysql_grants.present: keystone
-      - mysql_user.present: keystone
-      - cmd.run: keystone-grant-wildcard
-      - cmd.run: keystone-grant-localhost
-      - cmd.run: keystone-grant-star
+      - pkg.installed: apache2
+      - pkg.installed: apache2-mod-wsgi
+      - pkg.installed: apache2-mod-ssl
+      - file.directory: /var/www/cgi-bin/keystone
+      - file.recurse: /etc/apache2
+  file.symlink:
+    - source: /etc/apache2/keystone.py
+    - target: /var/www/cgi-bin/keystone/main
+    - require: /var/www/cgi-bin/keystone
+  file.symlink:
+    - source: /etc/apache2/keystone.py
+    - target: /var/www/cgi-bin/keystone/admin
+    - require: /var/www/cgi-bin/keystone
+
+keystone-services:
   service:
-    - name: keystone
     - running
     - enable: True
     - restart: True
-    - require:
-      - service.running: mysql
+    - name: apache2
     - watch:
       - file: /etc/keystone
-
-keystone-setup:
-  cmd.run:
-    - unless: test -f /etc/setup-done-keystone
-    - name: /root/scripts/keystone-setup.sh
+      - file: /etc/apache2
     - require:
-      - service.running: mysql
-      - pkg.installed: keystone
-      - file.recurse: /etc/keystone
-      - file.recurse: /root/scripts
-      - service.restart: keystone
+      - pkg.installed: keystone-pkgs
+      - cmd.run: a2ensite keystone
+
+/var/www/cgi-bin/keystone:
+  file.directory:
+    - makedirs: True
+
+/etc/apache2:
+  file:
+    - recurse
+    - source: salt://openstack/apache2
+    - template: jinja
+    - watch:
+      - pkg.installed: apache2
+    - context:
+        keystone: {{ pillar['keystone'] }}
 
 /etc/keystone:
   file:
@@ -60,9 +69,14 @@ keystone-setup:
     - watch:
       - pkg.installed: keystone
     - context:
-        secrets: {{ pillar['secrets'] }}
         infra: {{ pillar['infra'] }}
+        secrets: {{ pillar['secrets'] }}
         networking: {{ pillar['networking'] }}
         endpoints: {{ pillar['endpoints'] }}
         keystone: {{ pillar['keystone'] }}
         nova: {{ pillar['nova'] }}
+        glance: {{ pillar['glance'] }}
+        cinder: {{ pillar['cinder'] }}
+        rabbit: {{ pillar['rabbit'] }}
+        swift: {{ pillar['swift'] }}
+        quantum: {{ pillar['quantum'] }}
