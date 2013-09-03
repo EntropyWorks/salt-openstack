@@ -28,11 +28,13 @@ keystone-pkgs:
   file.symlink:
     - source: /etc/apache2/keystone.py
     - target: /var/www/cgi-bin/keystone/main
-    - require: /var/www/cgi-bin/keystone
+    - require:
+      - file.directory: /var/www/cgi-bin/keystone
   file.symlink:
     - source: /etc/apache2/keystone.py
     - target: /var/www/cgi-bin/keystone/admin
-    - require: /var/www/cgi-bin/keystone
+    - require:
+      - file.directory: /var/www/cgi-bin/keystone
 
 keystone-services:
   service:

@@ -29,15 +29,15 @@ apache2:
 apache2-mod-wsgi:
   pkg.installed:
     - name: libapache2-mod-wsgi
-  cmd:
-    - run: a2enmod wsgi
+  cmd.run:
+    - name: a2enmod wsgi
   require:
     - pkg: apache2
 
 apache2-mod-ssl:
   pkg.installed:
     - name: libapache2-mod-ssl
-  cmd:
-    - run: a2enmod ssl
+  cmd.run:
+    - name: a2enmod ssl
   require:
     - pkg: apache2
