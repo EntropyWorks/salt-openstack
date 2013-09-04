@@ -1,3 +1,5 @@
+User keystone
+Group keystone
 SSLRandomSeed startup file:/dev/urandom 1024
 SSLRandomSeed connect file:/dev/urandom 1024
 SSLSessionCache shm:/usr/local/apache2/logs/ssl_cache_shm

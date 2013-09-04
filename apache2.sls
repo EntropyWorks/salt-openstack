@@ -22,9 +22,7 @@ apache2:
     - enable: true
     - restart: True
     - watch:
-      - file: /etc/apache2/apache2.conf
-      - file: /etc/apache2/ports.conf
-      - file: /etc/apache2/sites-enabled/*
+      - file: /etc/apache2
 
 apache2-mod-wsgi:
   pkg.installed:
@@ -32,12 +30,10 @@ apache2-mod-wsgi:
   cmd.run:
     - name: a2enmod wsgi
   require:
-    - pkg: apache2
+    - pkg.installed: apache2
 
 apache2-mod-ssl:
-  pkg.installed:
-    - name: libapache2-mod-ssl
   cmd.run:
     - name: a2enmod ssl
   require:
-    - pkg: apache2
+    - pkg.installed: apache2

@@ -22,17 +22,21 @@ keystone-pkgs:
     - require:
       - pkg.installed: apache2
       - pkg.installed: apache2-mod-wsgi
-      - pkg.installed: apache2-mod-ssl
+      - cmd.run: apache2-mod-ssl
       - file.directory: /var/www/cgi-bin/keystone
       - file.recurse: /etc/apache2
+
+/var/www/cgi-bin/keystone/main:
   file.symlink:
-    - source: /etc/apache2/keystone.py
-    - target: /var/www/cgi-bin/keystone/main
+    - source: /var/www/cgi-bin/keystone/main
+    - target: /etc/apache2/keystone.py
     - require:
       - file.directory: /var/www/cgi-bin/keystone
+
+/var/www/cgi-bin/keystone/admin:
   file.symlink:
-    - source: /etc/apache2/keystone.py
-    - target: /var/www/cgi-bin/keystone/admin
+    - source: /var/www/cgi-bin/keystone/admin
+    - target: /etc/apache2/keystone.py
     - require:
       - file.directory: /var/www/cgi-bin/keystone
 
@@ -47,7 +51,15 @@ keystone-services:
       - file: /etc/apache2
     - require:
       - pkg.installed: keystone-pkgs
-      - cmd.run: a2ensite keystone
+      - cmd.run: a2ensite
+      - file.symlink: /var/www/cgi-bin/keystone/main
+      - file.symlink: /var/www/cgi-bin/keystone/admin
+
+a2ensite:
+  cmd.run:
+    - name: a2ensite keystone
+  require:
+    - pkg.installed: keystone-pkgs
 
 /var/www/cgi-bin/keystone:
   file.directory:
