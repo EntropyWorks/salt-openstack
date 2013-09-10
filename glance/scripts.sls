@@ -33,8 +33,8 @@ sync-dir-packages:
     - source: salt://openstack/glance/scripts/sync_dir.pl
     - user: root
     - mode: 755 
-   - require:
-      - pkg.installed: sync-dir-pkgs
+    - require:
+      - pkg: sync-dir-pkgs
 
 /usr/local/bin/sync.yaml
   file.managed:
@@ -42,3 +42,6 @@ sync-dir-packages:
     - template: jinja
     - user: root
     - mode: 644 
+    - require:
+      - pkg: sync-dir-pkgs
+      - file: /usr/local/bin/sync_dirs.pl
