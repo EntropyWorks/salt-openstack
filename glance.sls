@@ -14,10 +14,12 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 #
+
 include:
   - openstack.mysql
   - openstack.memcached
   - openstack.root-scripts
+  - openstack.glance.scripts
 
 glance-pkgs:
   pkg.installed:
