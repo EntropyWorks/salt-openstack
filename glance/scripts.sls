@@ -36,7 +36,7 @@ sync-dir-packages:
     - require:
       - pkg: sync-dir-pkgs
 
-/usr/local/bin/sync.yaml
+/usr/local/bin/sync.yaml:
   file.managed:
     - source: salt://openstack/glance/scripts/sync.yaml
     - template: jinja
