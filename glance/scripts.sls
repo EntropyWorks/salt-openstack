@@ -34,7 +34,7 @@ sync-dir-packages:
     - user: root
     - mode: 755 
     - require:
-      - pkg: sync-dir-pkgs
+      - pkg.installed: sync-dir-packages
 
 /usr/local/bin/sync.yaml:
   file.managed:
@@ -43,5 +43,5 @@ sync-dir-packages:
     - user: root
     - mode: 644 
     - require:
-      - pkg: sync-dir-pkgs
+      - pkg.installed: sync-dir-packages
       - file: /usr/local/bin/sync_dirs.pl
