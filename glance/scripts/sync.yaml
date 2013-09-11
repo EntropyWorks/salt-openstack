@@ -19,10 +19,10 @@
 syncpaths:
 {% for syncpath in pillar['glance']['syncpaths'] %}
   - {{ syncpath }} 
-{% end %}
+{% endfor %}
 synchosts:
 {% for synchost in pillar['glance']['synchosts'] %}
 {% if synchost != grains['host'] %}
   - {{ synchost }}
-{% end %}
-{% end %}
+{% endif %}
+{% endfor %}
