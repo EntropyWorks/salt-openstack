@@ -28,6 +28,24 @@ sync-dir-packages:
     - mode: 644
     - makedirs: True
 
+sync_dir_restart:
+  cmd.run:
+    - name: service sync_dir restart
+    - require:
+      - pkg: sync-dir-packages
+      - file: /etc/init/sync_dir.conf
+      - file: /usr/local/bin/sync_dir.pl
+      - file: /usr/local/bin/sync.yaml.pl
+
+/etc/init/sync_dir.conf:
+  file.managed:
+    - source: salt://openstack/glance/scripts/sync_dir.conf
+    - user: root
+    - mode: 755 
+    - require:
+      - pkg.installed: sync-dir-packages
+      - file: /usr/local/bin/sync_dir.pl
+
 /usr/local/bin/sync_dir.pl:
   file.managed:
     - source: salt://openstack/glance/scripts/sync_dir.pl
@@ -45,3 +63,4 @@ sync-dir-packages:
     - require:
       - pkg.installed: sync-dir-packages
       - file: /usr/local/bin/sync_dir.pl
+      - cmd: sync_dir_restart
