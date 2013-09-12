@@ -35,7 +35,7 @@ sync_dir_restart:
       - pkg: sync-dir-packages
       - file: /etc/init/sync_dir.conf
       - file: /usr/local/bin/sync_dir.pl
-      - file: /usr/local/bin/sync.yaml.pl
+      - file: /usr/local/bin/sync.yaml
 
 /etc/init/sync_dir.conf:
   file.managed:
