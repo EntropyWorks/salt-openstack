@@ -1,3 +1,9 @@
+# Changes on the way!!
+
+I need to take what I have and move to the proper salt formula layout. I'm going to be working on a new 
+branch called forumla. 
+
+
 ### What's new ?
 
 Lots! This is how I am installing OpenStack in a multi host environment.  At the moment this creates two classes of servers.
