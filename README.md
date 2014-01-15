@@ -1,41 +1,14 @@
 # Changes on the way!!
 
+
+The items here are really raw right now and I'm 99% sure they will not work like it is.
+
 I need to take what I have and move to the proper salt formula layout. I'm going to be working on a new 
 branch called forumla. 
 
-
 ### What's new ?
 
-Lots! This is how I am installing OpenStack in a multi host environment.  At the moment this creates two classes of servers.
-
-- all-in-one server
- - nova-api
- - nova-common
- - nova-network
- - nova-cert
- - nova-consoleauth
- - nova-scheduler
- - nova-novncproxy
- - nova-conductor
-- nova-compute
- - nova-common
- - nova-compute
- - nova-network
- - nova-api-metadata
- - nova-novncproxy
- - nova-conductor
-
-There currently no HA in this setup. That is something I'm working on. 
-
 ### Todo
-
-- Add better instructions
-- MySQL HA
-- RabbitMQ HA
-- Nova HA
-- Ceph
-- Quantum
-- Celliometer   
 
 ### Contact
 
