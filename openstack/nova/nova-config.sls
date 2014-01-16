@@ -15,12 +15,12 @@
 #    under the License.
 #
 include:
-  - openstack.root-scripts
+  - openstack.dependency.root-scripts
 
 /etc/nova:
   file:
     - recurse
-    - source: salt://openstack/nova
+    - source: salt://openstack/nova/nova-cfg
     - template: jinja
     - required:
       - pkg.installed: nova-pkgs

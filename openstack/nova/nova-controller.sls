@@ -20,13 +20,13 @@
 # DB on a different host than the controller.
 #---------------------------
 include:
-  - openstack.mysql
+  - openstack.dependency.mysql
   - openstack.keystone
   - openstack.glance
   - openstack.cinder
-  - openstack.dashboard
-  - openstack.nova-config
-  - openstack.root-scripts
+  - openstack.horizon
+  - openstack.nova.nova-config
+  - openstack.dependency.scripts.root-scripts
 
 debconf-utils:
   pkg.installed

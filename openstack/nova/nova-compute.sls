@@ -15,11 +15,11 @@
 #    under the License.
 #
 include:
-  - openstack.nova-user
-  - openstack.nova-config
-  - openstack.root-scripts
-  - openstack.haproxy
-  - openstack.libvirt
+  - openstack.nova.nova-user
+  - openstack.nova.nova-config
+  - openstack.dependency.scripts.root-scripts
+  - openstack.dependency.haproxy
+  - openstack.dependency.libvirt
 
 python-eventlet:
   pkg.installed
