@@ -15,14 +15,17 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 #
-
+{%- if  pillar['glance']['syncpaths'] %}
 syncpaths:
 {%- for syncpath in pillar['glance']['syncpaths'] %}
   - {{ syncpath }} 
 {% endfor -%}
+{% endif -%}
+{%- if  pillar['glance']['synchosts'] %}
 synchosts:
 {%- for synchost in pillar['glance']['synchosts'] %}
 {%- if synchost != grains['host'] %}
   - {{ synchost -}}
 {% endif -%}
 {% endfor -%}
+{% endif -%}
