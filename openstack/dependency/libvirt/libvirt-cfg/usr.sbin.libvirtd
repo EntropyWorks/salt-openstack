@@ -1,3 +1,4 @@
+{{pillar['headers']['salt']['file']}}
 # Last Modified: Mon Jul  6 17:23:58 2009
 # Moddifed by Salt
 #include <tunables/global>
