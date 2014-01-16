@@ -1,4 +1,6 @@
 #!/bin/bash
+{{pillar['headers']['salt']['file']}}
+
 echo " DO NOT RUN UNLESS YOU NEED TO"
 exit
 rm 01.pem ca* index.txt* req.pem serial* signing_cert.pem
