@@ -47,7 +47,7 @@ haproxy:
 /etc/haproxy:
   file:
     - recurse
-    - source: salt://openstack/haproxy
+    - source: salt://openstack/dependancy/haproxy
     - template: jinja
     - context:
         infra: {{ pillar['infra'] }}

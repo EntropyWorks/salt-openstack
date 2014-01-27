@@ -36,13 +36,13 @@ libvirt-bin:
 
 /etc/libvirt/qemu.conf:
   file.managed:
-    - source: salt://openstack/libvirt/qemu.conf
+    - source: salt://openstack/dependancy/libvirt/qemu.conf
     - required:
       - pkg: libvirt-bin
 
 /etc/apparmor.d/usr.sbin.libvirtd:
   file.managed:
-    - source: salt://openstack/libvirt/usr.sbin.libvirtd
+    - source: salt://openstack/dependancy/libvirt/usr.sbin.libvirtd
     - stateful: True
     - required:
       - pkg: libvirt-bin
@@ -56,7 +56,7 @@ libvirt-apparmor:
 
 /etc/libvirt/libvirtd.conf:
   file.managed:
-    - source: salt://openstack/libvirt/libvirtd.conf
+    - source: salt://openstack/dependancy/libvirt/libvirtd.conf
     - required:
       - pkg: libvirt-bin
 

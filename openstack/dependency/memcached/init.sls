@@ -19,7 +19,7 @@ memcached:
     - name: memcached
   file.managed:
     - name: /etc/memcached.conf
-    - source: salt://openstack/memcached/memcached.conf
+    - source: salt://openstack/dependancy/memcached/memcached.conf
   service.running:
     - enable: true
     - restart: True

@@ -1,6 +1,5 @@
 # Copyright 2012-2013 Hewlett-Packard Development Company, L.P.
 # All Rights Reserved.
-# Copyright 2013 Yazz D. Atlas <yazz.atlas@hp.com>
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
 #    not use this file except in compliance with the License. You may obtain
@@ -20,7 +19,7 @@ rabbitmq-server:
 
 /etc/rabbitmq/rabbitmq.config:
   file.managed:
-    - source: salt://openstack/rabbitmq/config/rabbitmq.config
+    - source: salt://openstack/dependancy/rabbitmq/config/rabbitmq.config
     - template: jinja
     - require:
       - file: /etc/rabbitmq/ssl
@@ -28,7 +27,7 @@ rabbitmq-server:
 
 /etc/rabbitmq/ssl:
   file.recurse:
-    - source: salt://openstack/rabbitmq/config/ssl
+    - source: salt://openstack/dependancy/rabbitmq/config/ssl
     - template: jinja
     - clean: True
     - template: jinja
@@ -86,7 +85,7 @@ stop_rabbitmq_service:
 
 /var/lib/rabbitmq/.erlang.cookie:
   file.managed:
-    - source: salt://openstack/rabbitmq/dot-erlang.sls
+    - source: salt://openstack/dependancy/rabbitmq/dot-erlang.sls
     - template: jinja
     - user: rabbitmq
     - group: rabbitmq
