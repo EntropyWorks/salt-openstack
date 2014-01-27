@@ -15,8 +15,7 @@
 #    under the License.
 #
 include:
-  - openstack.root-scripts
-  - openstack.memcached
+  - openstack.dependency.root-scripts
 
 cinder-pkgs:
   pkg.installed:
@@ -29,15 +28,10 @@ cinder-pkgs:
       - iscsitarget
       - iscsitarget-dkms
     - require:
-      - service.running: mysql
       - pkg.installed: python-mysqldb
-      - pkg.installed: rabbitmq-server
       - mysql_database.present: cinder
       - mysql_grants.present: cinder
       - mysql_user.present: cinder
-      - cmd.run: cinder-grant-wildcard
-      - cmd.run: cinder-grant-localhost
-      - cmd.run: cinder-grant-star
 
 cinder-services:
   service:
@@ -62,6 +56,7 @@ cinder-setup:
       - file.recurse: /root/scripts
       - pkg.installed: cinder-pkgs
 
+# This needs rewriting I fear
 /etc/cinder:
   file:
     - recurse
