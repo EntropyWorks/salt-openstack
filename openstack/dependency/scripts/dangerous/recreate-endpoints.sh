@@ -1,3 +1,22 @@
+#!/bin/bash
+# Copyright 2012-2013 Hewlett-Packard Development Company, L.P.
+# All Rights Reserved.
+#
+# Authored by Yazz D. Atlas <yazz.atlas@hp.com>
+#
+#    Licensed under the Apache License, Version 2.0 (the "License"); you may
+#    not use this file except in compliance with the License. You may obtain
+#    a copy of the License at
+#
+#         http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+#    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+#    License for the specific language governing permissions and limitations
+#    under the License.
+#
+
 export CONTROLLER_PUBLIC_ADDRESS="{{ endpoints.openstack_public_address }}"
 export CONTROLLER_ADMIN_ADDRESS="{{ endpoints.openstack_admin_address }}"
 export CONTROLLER_INTERNAL_ADDRESS="{{ endpoints.openstack_internal_address }}"
@@ -18,8 +37,6 @@ KEYSTONE_SERVICE = $(keystone service-get keystone | grep id | awk '{ print $4 }
 VOLUME_SERVICE = $(keystone service-get cinder | grep id | awk '{ print $4 }')
 
 echo VOLUME_SERVICE KEYSTONE_SERVICE GLANCE_SERVICE EC2_SERVICE NOVA_SERVICE
-
-exit;
 
     keystone endpoint-create --region $KEYSTONE_REGION --service-id $NOVA_SERVICE \
         --publicurl "$NOVA_PROTOCOL://$CONTROLLER_PUBLIC_ADDRESS:\$(compute_port)s/v2/\$(tenant_id)s" \
@@ -47,4 +64,3 @@ exit;
         --internalurl "$CINDER_PROTOCOL://$CONTROLLER_INTERNAL_ADDRESS:$CINDER_PORT/v1/\$(tenant_id)s"
 
 
-nova-manage floating create --pool dbaas-aw2az2-v1 --interface vlan717  --ip_range 15.125.16.0/20

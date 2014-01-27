@@ -2,6 +2,8 @@
 # Copyright 2012-2013 Hewlett-Packard Development Company, L.P.
 # All Rights Reserved.
 #
+# Authored by Yazz D. Atlas <yazz.atlas@hp.com>
+#
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
 #    not use this file except in compliance with the License. You may obtain
 #    a copy of the License at
@@ -14,9 +16,28 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 #
-backup_dir="/var/lib/backups/mysql"
-filename="${backup_dir}/mysql-`hostname`-`eval date +%Y%m%d`.sql.gz"
-# Dump the entire MySQL database
-/usr/bin/mysqldump --opt --all-databases | gzip > $filename 
-# Delete backups older than 7 days
-find $backup_dir -ctime +7 -type f -delete
+#
+# Yea I should just write this in python right.
+#
+TOTAL=0
+COUNT=20
+TIME=1
+NAME=$(nova list | awk '{ print $2 }' | grep "\-" )
+for i in ${NAME}
+do
+        if ( nova delete ${i} ) ; then
+                echo -n "."
+                TOTAL=$(($TOTAL+1))
+        fi
+
+        if ((TIME++ / ${COUNT})) ; then
+                echo "$TOTAL"
+                TIME=1
+        fi
+done
+if ! ((TIME-- / ${COUNT})) ; then
+        echo " "
+fi
+
+echo "----------"
+echo "Total: ${TOTAL}"

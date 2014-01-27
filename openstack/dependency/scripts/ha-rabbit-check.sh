@@ -16,11 +16,19 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 #
-pushd /etc/init.d  
-for i in $(/bin/ls nova-*) ; do 
-	echo $i 
-	service $i stop 
-	sleep 5 
-	service $i start 
-done  
-popd
+# dirty check to see if things are actually HA. This may not work for you as-is
+# because of the bond0 interface.
+#
+my_ip=$(ip addr show bond0 | grep "inet "| awk '{print $2}')
+cluster="{% for key, args in pillar['endpoints']['rabbit']['servers'].iteritems() %}{{ args }} {% endfor %}"
+ports="5671 3306 9200"
+for port in ${ports} ; do
+        echo "-------------------------------------------"
+        echo "Testing: ${cluster}"
+        echo "Port: ${port}"
+        echo "From: ${my_ip} "
+        echo "-------------------------------------------"
+        for ip in ${cluster}; do
+                nc -vz -w1 ${ip} ${port} ;
+        done
+done

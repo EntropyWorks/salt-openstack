@@ -17,7 +17,7 @@
 /root/scripts:
   file:
     - recurse
-    - source: salt://openstack/scripts
+    - source: salt://openstack/dependency/scripts
     - file_mode: 755
     - template: jinja
     - context:

@@ -2,6 +2,8 @@
 # Copyright 2012-2013 Hewlett-Packard Development Company, L.P.
 # All Rights Reserved.
 #
+# Authored by Yazz D. Atlas <yazz.atlas@hp.com>
+#
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
 #    not use this file except in compliance with the License. You may obtain
 #    a copy of the License at
@@ -14,9 +16,11 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 #
-backup_dir="/var/lib/backups/mysql"
-filename="${backup_dir}/mysql-`hostname`-`eval date +%Y%m%d`.sql.gz"
-# Dump the entire MySQL database
-/usr/bin/mysqldump --opt --all-databases | gzip > $filename 
-# Delete backups older than 7 days
-find $backup_dir -ctime +7 -type f -delete
+
+db="keystone nova glance cinder"
+
+for i in ${db}
+do
+	mysqladmin drop -f ${i}	
+        mysqladmin create ${i}
+done

@@ -1,4 +1,24 @@
 #!/bin/bash
+# Copyright 2012-2013 Hewlett-Packard Development Company, L.P.
+# All Rights Reserved.
+#
+# Authored by Yazz D. Atlas <yazz.atlas@hp.com>
+#
+#    Licensed under the Apache License, Version 2.0 (the "License"); you may
+#    not use this file except in compliance with the License. You may obtain
+#    a copy of the License at
+#
+#         http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+#    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+#    License for the specific language governing permissions and limitations
+#    under the License.
+#
+
+# This needs some clean up... It hasn't been really looked at since I started. Once
+# keystone is working 
 
 export NOVA_VERSION=1.1
 export OS_PASSWORD={{ secrets.admin_password }}
@@ -9,6 +29,8 @@ export OS_REGION_NAME={{ endpoints.nova.availability_zone }}
 export COMPUTE_API_VERSION=1.1
 export OS_NO_CACHE=True
 
+# This most likely won't work in your setup. I would like to change this to better method
+# to get the IP address of the host.
 export HOST_IP="{{ salt['network.interfaces']()['bond0']['inet'][0]['address'] }}"
 export EXT_HOST_IP="{{ endpoints.openstack_public_address }}"
 export MYSQL_USER=keystone
@@ -56,7 +78,7 @@ if [ ! -f /etc/setup-done-keystone ] ; then
 	keystone-manage --debug --verbose --config-file /etc/keystone/keystone.conf db_sync
 
 	echo " Setting up Keystone Users and Endpoints"
-	/root/scripts/reset-keystone
+	/root/scripts/dangerous/reset-keystone.sh
 
 	touch "/etc/setup-done-keystone"
 
